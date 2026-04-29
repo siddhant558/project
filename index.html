@@ -1,0 +1,1722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>National Postal Museum — Project Progress Intelligence</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700&family=DM+Mono:wght@400;500&family=Fraunces:opsz,wght@9..144,400;9..144,600&display=swap" rel="stylesheet">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0F1117;--bg2:#161B27;--bg3:#1E2436;--bg4:#252D42;
+  --card:#1A2035;--card2:#1F2740;--card3:#242E47;
+  --border:#2A3450;--border2:#323D5A;
+  --text:#E8EDF5;--text2:#9BA3B8;--text3:#6B7494;--text4:#4A5268;
+  --accent:#7C5CFC;--accent2:#6A4AE8;--accent-glow:rgba(124,92,252,0.15);
+  --green:#22C55E;--green-dim:rgba(34,197,94,0.12);
+  --red:#F43F5E;--red-dim:rgba(244,63,94,0.12);
+  --amber:#F59E0B;--amber-dim:rgba(245,158,11,0.12);
+  --blue:#3B82F6;--blue-dim:rgba(59,130,246,0.12);
+  --purple:#A855F7;--purple-dim:rgba(168,85,247,0.12);
+  --teal:#14B8A6;--teal-dim:rgba(20,184,166,0.12);
+  --r:10px;--r2:8px;--r3:6px;--r4:4px;
+  --shadow:0 1px 3px rgba(0,0,0,0.3),0 4px 16px rgba(0,0,0,0.2);
+  --shadow2:0 8px 32px rgba(0,0,0,0.4),0 2px 8px rgba(0,0,0,0.3);
+}
+html{font-size:14px;scroll-behavior:smooth}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+
+/* ── OVERLAYS ── */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.75);backdrop-filter:blur(12px);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px}
+.ov-card{width:100%;max-width:480px;background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;box-shadow:var(--shadow2)}
+.ov-head{background:linear-gradient(135deg,#1E2436 0%,#252D42 100%);padding:28px 32px;position:relative;overflow:hidden;border-bottom:1px solid var(--border)}
+.ov-head::before{content:'';position:absolute;top:-40px;right:-40px;width:140px;height:140px;border-radius:50%;background:var(--accent);opacity:0.08}
+.ov-head::after{content:'';position:absolute;bottom:-20px;left:20px;width:80px;height:80px;border-radius:50%;background:var(--accent);opacity:0.05}
+.ov-head h2{font-size:20px;font-weight:700;color:var(--text);letter-spacing:-0.3px}
+.ov-head p{font-size:12px;color:var(--text3);margin-top:4px;font-family:'JetBrains Mono',monospace}
+.ov-body{padding:28px 32px}
+.of{margin-bottom:14px}
+.of label{display:block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--text3);margin-bottom:6px}
+.of input,.of select,.of textarea{width:100%;padding:10px 13px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r2);font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;color:var(--text);outline:none;transition:border-color 0.2s,background 0.2s}
+.of input:focus,.of select:focus,.of textarea:focus{border-color:var(--accent);background:var(--bg4)}
+.of input::placeholder,.of textarea::placeholder{color:var(--text4)}
+.of select option{background:var(--bg3);color:var(--text)}
+.btn-primary{width:100%;padding:12px;background:var(--accent);color:#fff;border:none;border-radius:var(--r2);font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all 0.15s;letter-spacing:0.2px}
+.btn-primary:hover{background:var(--accent2);box-shadow:0 0 20px var(--accent-glow)}
+.btn-primary:disabled{opacity:0.4;cursor:not-allowed}
+.btn-ghost{width:100%;padding:10px;background:transparent;color:var(--text2);border:1px solid var(--border2);border-radius:var(--r2);font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;cursor:pointer;transition:all 0.15s;margin-top:8px}
+.btn-ghost:hover{border-color:var(--text3);color:var(--text)}
+.msg-err{padding:9px 12px;border-radius:var(--r3);font-size:12px;margin-top:10px;background:var(--red-dim);color:var(--red);border:1px solid rgba(244,63,94,0.25);display:none}
+.msg-ok{padding:9px 12px;border-radius:var(--r3);font-size:12px;margin-top:10px;background:var(--green-dim);color:var(--green);border:1px solid rgba(34,197,94,0.25);display:none}
+.divider{display:flex;align-items:center;gap:10px;margin:16px 0;color:var(--text4);font-size:12px}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border)}
+.tabs{display:flex;gap:2px;margin-bottom:18px;background:var(--bg3);padding:3px;border-radius:var(--r2);border:1px solid var(--border)}
+.tab{flex:1;padding:7px;text-align:center;border-radius:var(--r3);font-size:13px;font-weight:500;cursor:pointer;transition:all 0.15s;color:var(--text3)}
+.tab.on{background:var(--bg4);color:var(--text);box-shadow:var(--shadow);font-weight:600}
+.setup-code{background:var(--bg);border:1px solid var(--border);border-radius:var(--r2);padding:14px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text3);line-height:1.9;margin-bottom:12px;overflow-x:auto;white-space:pre;max-height:180px;overflow-y:auto}
+
+/* ── HEADER ── */
+.header{background:var(--card);padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:58px;position:sticky;top:0;z-index:50;border-bottom:1px solid var(--border)}
+.h-logo{display:flex;align-items:center;gap:12px}
+.h-stamp{width:32px;height:32px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;box-shadow:0 0 12px var(--accent-glow)}
+.h-title{font-size:14px;font-weight:700;color:var(--text);letter-spacing:-0.2px}
+.h-sub{font-size:10px;color:var(--text3);font-family:'JetBrains Mono',monospace;margin-top:1px}
+.h-right{display:flex;align-items:center;gap:10px}
+.sync-pill{display:flex;align-items:center;gap:6px;padding:5px 11px;border:1px solid var(--border);border-radius:20px;font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--text3)}
+.sdot{width:6px;height:6px;border-radius:50%;background:var(--text4)}
+.sdot.live{background:var(--green);box-shadow:0 0 6px var(--green);animation:glow 2s infinite}
+@keyframes glow{0%,100%{box-shadow:0 0 4px var(--green)}50%{box-shadow:0 0 10px var(--green),0 0 20px rgba(34,197,94,0.3)}}
+.sdot.saving{background:var(--amber);animation:glow2 0.8s infinite}
+@keyframes glow2{0%,100%{opacity:1}50%{opacity:0.4}}
+.h-user{display:flex;align-items:center;gap:8px}
+.h-av{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--purple));display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff}
+.h-email{font-size:11px;color:var(--text3);font-family:'JetBrains Mono',monospace;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.btn-so{padding:5px 12px;background:transparent;border:1px solid var(--border2);border-radius:6px;color:var(--text3);font-size:11px;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;transition:all 0.15s}
+.btn-so:hover{border-color:var(--red);color:var(--red)}
+
+/* ── NAV ── */
+.nav-bar{background:var(--card);border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;position:sticky;top:58px;z-index:40;overflow-x:auto}
+.nav-tab{padding:14px 16px;font-size:12px;font-weight:600;color:var(--text3);cursor:pointer;border-bottom:2px solid transparent;transition:all 0.15s;display:flex;align-items:center;gap:6px;white-space:nowrap;letter-spacing:0.2px}
+.nav-tab:hover{color:var(--text)}
+.nav-tab.on{color:var(--accent);border-bottom-color:var(--accent)}
+.nav-tab .badge{padding:1px 6px;border-radius:10px;font-size:9px;font-weight:700;font-family:'JetBrains Mono',monospace}
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:8px;padding:8px 0}
+.btn-sm{padding:7px 14px;background:var(--accent);color:#fff;border:none;border-radius:var(--r3);font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;gap:5px;letter-spacing:0.2px}
+.btn-sm:hover{background:var(--accent2);box-shadow:0 0 16px var(--accent-glow)}
+.btn-sm-ghost{padding:7px 12px;background:transparent;color:var(--text3);border:1px solid var(--border2);border-radius:var(--r3);font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;cursor:pointer;transition:all 0.15s;font-weight:500}
+.btn-sm-ghost:hover{border-color:var(--text2);color:var(--text)}
+.btn-red{background:var(--red)!important}
+.btn-red:hover{background:#e0294a!important;box-shadow:0 0 16px rgba(244,63,94,0.3)!important}
+
+/* ── LAYOUT ── */
+.page{padding:24px;max-width:1500px;margin:0 auto}
+.page-grid{display:grid;grid-template-columns:1fr 300px;gap:20px}
+
+/* ── STAT CARDS ── */
+.stats-row{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:20px}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:16px 18px;transition:all 0.2s;cursor:default;position:relative;overflow:hidden}
+.stat:hover{border-color:var(--border2);transform:translateY(-1px);box-shadow:var(--shadow)}
+.stat-accent{position:absolute;top:0;left:0;right:0;height:2px}
+.stat.s1 .stat-accent{background:linear-gradient(90deg,var(--red),transparent)}
+.stat.s2 .stat-accent{background:linear-gradient(90deg,var(--green),transparent)}
+.stat.s3 .stat-accent{background:linear-gradient(90deg,var(--blue),transparent)}
+.stat.s4 .stat-accent{background:linear-gradient(90deg,var(--red),transparent)}
+.stat.s5 .stat-accent{background:linear-gradient(90deg,var(--purple),transparent)}
+.stat.s6 .stat-accent{background:linear-gradient(90deg,var(--teal),transparent)}
+.stat-ico{font-size:16px;margin-bottom:10px;display:block}
+.stat-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin-bottom:5px}
+.stat-val{font-size:26px;font-weight:800;color:var(--text);line-height:1;letter-spacing:-1px}
+.stat-note{font-size:10px;color:var(--text3);margin-top:4px;font-family:'JetBrains Mono',monospace}
+
+/* ── SECTION HEADER ── */
+.sec-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.sec-title{font-size:15px;font-weight:700;color:var(--text);letter-spacing:-0.2px}
+.sec-sub{font-size:11px;color:var(--text3);font-family:'JetBrains Mono',monospace;margin-top:2px}
+
+/* ── WORKSTREAM CARDS ── */
+.streams-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px}
+.stream-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:16px;transition:all 0.2s;cursor:pointer;position:relative;overflow:hidden}
+.stream-card::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;transition:all 0.2s}
+.stream-card:hover{border-color:var(--border2);transform:translateY(-1px);box-shadow:var(--shadow)}
+.sc-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.sc-ico{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.sc-pct{font-size:20px;font-weight:800;letter-spacing:-0.5px}
+.sc-name{font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px}
+.sc-status{font-size:10px;color:var(--text3);font-family:'JetBrains Mono',monospace}
+.sc-bar-bg{height:4px;background:var(--border);border-radius:2px;overflow:hidden;margin:10px 0 8px}
+.sc-bar-fill{height:100%;border-radius:2px;transition:width 0.6s cubic-bezier(0.4,0,0.2,1)}
+.sc-meta{display:flex;justify-content:space-between;font-size:10px;color:var(--text3);font-family:'JetBrains Mono',monospace}
+
+/* ── TASK ITEMS ── */
+.task-list{display:flex;flex-direction:column;gap:6px}
+.task-item{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:12px 14px;transition:all 0.15s;animation:fadeUp 0.3s ease;position:relative}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.task-item:hover{border-color:var(--border2);background:var(--card2)}
+.task-row1{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.task-ws{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;padding:2px 7px;border-radius:var(--r4);font-family:'JetBrains Mono',monospace;white-space:nowrap}
+.task-name{font-size:13px;font-weight:600;color:var(--text);flex:1;line-height:1.3}
+.task-row2{display:flex;align-items:center;gap:10px}
+.pct-wrap{display:flex;align-items:center;gap:8px;flex:1}
+.pct-bar{flex:1;height:3px;background:var(--border);border-radius:2px;overflow:hidden}
+.pct-fill{height:100%;border-radius:2px;transition:width 0.5s ease}
+.pct-lbl{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text3);min-width:28px;text-align:right}
+.task-date{font-size:10px;color:var(--text3);font-family:'JetBrains Mono',monospace;white-space:nowrap}
+.task-actions{display:flex;gap:5px;margin-top:8px}
+.task-btn{padding:3px 9px;border-radius:var(--r4);font-size:10px;font-weight:600;cursor:pointer;border:1px solid var(--border2);background:transparent;color:var(--text3);font-family:'Plus Jakarta Sans',sans-serif;transition:all 0.12s}
+.task-btn:hover{background:var(--bg4);color:var(--text);border-color:var(--text3)}
+.task-btn.del:hover{background:var(--red-dim);border-color:var(--red);color:var(--red)}
+
+/* STATUS BADGES */
+.s-ns{background:rgba(107,116,148,0.15);color:var(--text3)}
+.s-ip{background:var(--blue-dim);color:var(--blue)}
+.s-done{background:var(--green-dim);color:var(--green)}
+.s-blocked{background:var(--red-dim);color:var(--red)}
+.status-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+
+/* ── ADD FORM ── */
+.add-form{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:18px;margin-bottom:18px}
+.form-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr auto;gap:10px;align-items:end}
+.fg label{display:block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin-bottom:5px}
+.fg input,.fg select{width:100%;padding:9px 11px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r3);font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;color:var(--text);outline:none;transition:border-color 0.2s;appearance:none}
+.fg input:focus,.fg select:focus{border-color:var(--accent);background:var(--bg4)}
+.fg input::placeholder{color:var(--text4)}
+.fg select option{background:var(--bg3);color:var(--text)}
+.btn-add-task{padding:9px 16px;background:var(--accent);color:#fff;border:none;border-radius:var(--r3);font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all 0.15s;white-space:nowrap}
+.btn-add-task:hover{background:var(--accent2);box-shadow:0 0 16px var(--accent-glow)}
+
+/* ── MILESTONES ── */
+.week-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);margin-bottom:10px;overflow:hidden;transition:all 0.2s}
+.week-card.all-done{border-color:rgba(34,197,94,0.3)}
+.week-head{display:flex;align-items:center;gap:12px;padding:14px 18px;cursor:pointer;border-bottom:1px solid transparent;transition:all 0.15s}
+.week-head:hover{background:var(--card2)}
+.week-head.open{border-bottom-color:var(--border)}
+.week-num{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;padding:3px 8px;border-radius:var(--r4);background:var(--bg3);color:var(--text3);letter-spacing:0.5px;text-transform:uppercase}
+.week-num.done{background:var(--green-dim);color:var(--green)}
+.week-title{font-size:14px;font-weight:700;color:var(--text);flex:1}
+.week-pct{font-size:18px;font-weight:800;min-width:50px;text-align:right;letter-spacing:-0.5px}
+.week-body{padding:14px 18px;display:none}
+.week-body.open{display:block}
+.milestone-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--r3);margin-bottom:5px;border:1px solid var(--border);background:var(--bg3);transition:all 0.15s}
+.milestone-item:hover{background:var(--bg4)}
+.milestone-item:last-child{margin-bottom:0}
+.milestone-item.ms-done{background:rgba(34,197,94,0.05);border-color:rgba(34,197,94,0.2)}
+.milestone-item.ms-blocked{background:rgba(244,63,94,0.05);border-color:rgba(244,63,94,0.2)}
+.ms-check{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--border2);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:all 0.15s}
+.ms-check.done{background:var(--green);border-color:var(--green);color:#fff;font-size:10px}
+.ms-check.blocked{background:var(--red);border-color:var(--red);color:#fff;font-size:10px}
+.ms-text{flex:1;font-size:12px;color:var(--text);line-height:1.4;font-weight:500}
+.ms-text.done-text{color:var(--text3)}
+.ms-status-badge{font-size:9px;font-weight:700;letter-spacing:0.6px;padding:2px 7px;border-radius:20px;font-family:'JetBrains Mono',monospace;white-space:nowrap;text-transform:uppercase}
+.ms-status-badge.done{background:var(--green-dim);color:var(--green)}
+.ms-status-badge.blocked{background:var(--red-dim);color:var(--red)}
+.ms-ws{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;padding:2px 6px;border-radius:var(--r4);font-family:'JetBrains Mono',monospace;white-space:nowrap}
+.ms-del{background:none;border:none;cursor:pointer;color:var(--text4);font-size:11px;padding:2px 5px;border-radius:var(--r4);transition:all 0.12s}
+.ms-del:hover{background:var(--red-dim);color:var(--red)}
+
+/* ── GANTT ── */
+.gantt-wrap{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+.gantt-head{display:grid;border-bottom:1px solid var(--border);font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text3);font-family:'JetBrains Mono',monospace}
+.gantt-row{display:grid;border-bottom:1px solid var(--border);align-items:center;transition:background 0.12s}
+.gantt-row:last-child{border-bottom:none}
+.gantt-row:hover{background:var(--card2)}
+.gantt-label{padding:11px 14px;font-size:12px;font-weight:600;color:var(--text);border-right:1px solid var(--border);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gantt-ws-label{padding:11px 14px;font-size:9px;font-family:'JetBrains Mono',monospace;border-right:1px solid var(--border);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text3)}
+.gantt-track{padding:7px 6px;display:flex;align-items:center}
+.gantt-bar-container{width:100%;height:18px;background:var(--bg3);border-radius:4px;overflow:hidden;position:relative}
+.gantt-bar{height:100%;border-radius:4px;display:flex;align-items:center;padding:0 6px;position:absolute;transition:width 0.5s ease}
+.gantt-bar-label{font-size:9px;font-weight:700;color:#fff;white-space:nowrap;font-family:'JetBrains Mono',monospace;overflow:hidden}
+.week-header-cell{padding:8px 4px;text-align:center;border-right:1px solid var(--border);font-size:9px}
+
+/* ── COMMENTS ── */
+.comment-item{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:8px;animation:fadeUp 0.3s ease;transition:all 0.15s}
+.comment-item:hover{border-color:var(--border2)}
+.comment-item.client-comment{border-left:3px solid var(--red)}
+.comment-item.reply-item{background:var(--bg3);border-color:var(--border);border-radius:var(--r2);padding:12px 14px;margin-bottom:5px}
+.c-av{border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;flex-shrink:0}
+.c-meta{display:flex;align-items:center;gap:7px;margin-bottom:8px;flex-wrap:wrap}
+.c-name{font-size:13px;font-weight:700;color:var(--text)}
+.c-role{font-size:9px;padding:2px 7px;border-radius:20px;font-family:'JetBrains Mono',monospace;font-weight:700;text-transform:uppercase;letter-spacing:0.5px}
+.c-date{font-size:10px;color:var(--text3);font-family:'JetBrains Mono',monospace;margin-left:auto}
+.c-text{font-size:13px;color:var(--text2);line-height:1.6}
+.c-tag{font-size:9px;padding:2px 6px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r4);color:var(--text3);font-family:'JetBrains Mono',monospace}
+.c-reply-btn{background:none;border:1px solid var(--border);font-size:11px;color:var(--text3);cursor:pointer;padding:3px 9px;border-radius:20px;font-family:'Plus Jakarta Sans',sans-serif;margin-top:8px;transition:all 0.12s;font-weight:600;display:inline-flex;align-items:center;gap:4px}
+.c-reply-btn:hover{background:var(--accent-glow);border-color:var(--accent);color:var(--accent)}
+.c-thread{margin-top:12px;padding-left:16px;border-left:2px solid var(--border);display:flex;flex-direction:column;gap:0}
+.c-reply-form{margin-top:10px;padding:12px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r2);display:none}
+.c-reply-form.open{display:block}
+.comment-input-area{background:var(--card2);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin-top:12px}
+.comment-input{width:100%;background:transparent;border:none;outline:none;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;color:var(--text);resize:none;min-height:64px}
+.comment-input::placeholder{color:var(--text4)}
+.comment-foot{display:flex;align-items:center;justify-content:space-between;margin-top:10px;padding-top:10px;border-top:1px solid var(--border)}
+
+/* ── RIGHT PANEL ── */
+.right-panel{display:flex;flex-direction:column;gap:14px}
+.rp-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+.rp-head{padding:13px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.rp-title{font-size:12px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:6px;letter-spacing:0.1px}
+.rp-body{padding:14px 16px}
+
+/* AI INSIGHTS */
+.ai-ins{display:flex;gap:8px;padding:9px 11px;border-radius:var(--r3);margin-bottom:6px;font-size:12px;line-height:1.6;border:1px solid transparent;animation:fadeUp 0.3s ease}
+.ai-ins:last-child{margin-bottom:0}
+.aii{font-size:13px;flex-shrink:0}
+.i-danger{background:var(--red-dim);border-color:rgba(244,63,94,0.2);color:#fca5a5}
+.i-warn{background:var(--amber-dim);border-color:rgba(245,158,11,0.2);color:#fcd34d}
+.i-ok{background:var(--green-dim);border-color:rgba(34,197,94,0.2);color:#86efac}
+.i-info{background:var(--blue-dim);border-color:rgba(59,130,246,0.2);color:#93c5fd}
+
+/* CHAT */
+.chat-msgs{max-height:200px;overflow-y:auto;padding:10px 0;display:flex;flex-direction:column;gap:7px}
+.bbl{padding:9px 12px;border-radius:9px;font-size:12px;line-height:1.55;max-width:90%;animation:fadeUp 0.2s ease}
+.bu{background:var(--accent);color:#fff;align-self:flex-end;border-radius:9px 9px 3px 9px}
+.ba{background:var(--bg3);color:var(--text2);border:1px solid var(--border);align-self:flex-start;border-radius:9px 9px 9px 3px}
+.ba.ld{color:var(--text4);font-style:italic}
+.chat-inp-row{display:flex;gap:7px;padding-top:10px;border-top:1px solid var(--border)}
+.chat-inp{flex:1;padding:8px 11px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r3);font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;color:var(--text);outline:none;resize:none;transition:border-color 0.2s}
+.chat-inp:focus{border-color:var(--accent);background:var(--bg4)}
+.chat-inp::placeholder{color:var(--text4)}
+.snd-btn{width:32px;height:32px;background:var(--accent);border:none;border-radius:var(--r3);color:#fff;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;align-self:flex-end;transition:all 0.15s}
+.snd-btn:hover{background:var(--accent2);box-shadow:0 0 12px var(--accent-glow)}
+.snd-btn:disabled{opacity:0.4;cursor:not-allowed}
+.q-chips{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px}
+.qchip{padding:4px 9px;background:var(--bg3);border:1px solid var(--border);border-radius:20px;font-size:10px;color:var(--text3);cursor:pointer;transition:all 0.15s;font-weight:600}
+.qchip:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-glow)}
+
+/* PROGRESS RING */
+.ring-wrap{display:flex;align-items:center;justify-content:center;padding:8px 0}
+.ring{transform:rotate(-90deg)}
+.ring-bg{fill:none;stroke:var(--border);stroke-width:8}
+.ring-fill{fill:none;stroke-width:8;stroke-linecap:round;transition:stroke-dashoffset 0.6s ease}
+.ring-text{fill:var(--text);font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:18px;dominant-baseline:middle;text-anchor:middle}
+.ring-sub{fill:var(--text3);font-family:'JetBrains Mono',monospace;font-size:9px;dominant-baseline:middle;text-anchor:middle}
+
+/* TIMELINE MINI */
+.timeline-mini{display:flex;flex-direction:column;gap:8px}
+.tm-item{display:flex;gap:10px;align-items:flex-start}
+.tm-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:4px}
+.tm-content{flex:1}
+.tm-label{font-size:12px;font-weight:500;color:var(--text)}
+.tm-date{font-size:10px;color:var(--text3);font-family:'JetBrains Mono',monospace}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);backdrop-filter:blur(6px);z-index:100;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.open{display:flex}
+.modal{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:24px;width:100%;max-width:500px;box-shadow:var(--shadow2);animation:fadeUp 0.2s ease}
+.modal h3{font-size:16px;font-weight:700;margin-bottom:16px;color:var(--text)}
+.modal-footer{display:flex;gap:8px;justify-content:flex-end;margin-top:20px}
+.btn-cancel{padding:8px 16px;background:transparent;border:1px solid var(--border2);border-radius:var(--r3);font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;cursor:pointer;color:var(--text3);transition:all 0.15s}
+.btn-cancel:hover{border-color:var(--text3);color:var(--text)}
+.btn-save{padding:8px 16px;background:var(--accent);color:#fff;border:none;border-radius:var(--r3);font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all 0.15s}
+.btn-save:hover{background:var(--accent2)}
+
+/* EMPTY STATE */
+.empty{text-align:center;padding:48px 20px;color:var(--text3)}
+.empty-ico{font-size:32px;margin-bottom:10px;opacity:0.4}
+.empty-txt{font-size:14px;font-weight:600;color:var(--text3);margin-bottom:4px}
+.empty-sub{font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--text4)}
+
+/* SHARE BANNER */
+.share-banner{background:var(--card2);border-bottom:1px solid var(--border);color:var(--text);padding:10px 24px;display:flex;align-items:center;justify-content:space-between;font-size:11px;font-family:'JetBrains Mono',monospace}
+.share-link{background:var(--bg3);border:1px solid var(--border);padding:4px 12px;border-radius:4px;color:var(--accent);cursor:pointer;transition:all 0.15s}
+.share-link:hover{border-color:var(--accent);background:var(--accent-glow)}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+::-webkit-scrollbar-thumb:hover{background:var(--text4)}
+
+@media(max-width:1100px){.page-grid{grid-template-columns:1fr}.stats-row{grid-template-columns:repeat(3,1fr)}.streams-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:700px){.stats-row{grid-template-columns:repeat(2,1fr)}.streams-grid{grid-template-columns:1fr}.form-grid{grid-template-columns:1fr 1fr}.page{padding:16px}.nav-bar{overflow-x:auto}}
+</style>
+</head>
+<body>
+
+<!-- SETUP OVERLAY -->
+<div class="overlay" id="ov-setup">
+  <div class="ov-card" style="max-width:520px;max-height:95vh;overflow-y:auto">
+    <div class="ov-head">
+      <h2>📮 Project Progress Tracker</h2>
+      <p>Connect Supabase for live team & client access</p>
+    </div>
+    <div class="ov-body">
+      <div style="margin-bottom:16px">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><span style="width:20px;height:20px;border-radius:50%;background:var(--ink);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center">1</span><span style="font-size:13px;font-weight:600">Run this SQL in Supabase SQL Editor</span></div>
+        <div class="setup-code">create table site_tasks (
+  id text primary key,
+  name text not null,
+  workstream text not null,
+  status text default 'not_started',
+  pct integer default 0,
+  week_num integer default 1,
+  due_date text,
+  notes text,
+  created_at timestamptz default now()
+);
+create table weekly_milestones (
+  id text primary key,
+  week_num integer not null,
+  week_label text,
+  start_date text,
+  end_date text,
+  description text not null,
+  workstream text,
+  done boolean default false,
+  blocked boolean default false,
+  created_at timestamptz default now()
+);
+create table site_comments (
+  id text primary key,
+  task_id text,
+  parent_id text,
+  author_name text,
+  author_email text,
+  author_role text default 'team',
+  content text not null,
+  workstream text,
+  created_at timestamptz default now()
+);
+alter table site_tasks enable row level security;
+alter table weekly_milestones enable row level security;
+alter table site_comments enable row level security;
+create policy "Allow all" on site_tasks for all to anon, authenticated using (true) with check (true);
+create policy "Allow all" on weekly_milestones for all to anon, authenticated using (true) with check (true);
+create policy "Allow all" on site_comments for all to anon, authenticated using (true) with check (true);</div>
+      </div>
+      <div style="margin-bottom:16px">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><span style="width:20px;height:20px;border-radius:50%;background:var(--ink);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center">2</span><span style="font-size:13px;font-weight:600">Enter your Supabase credentials</span></div>
+        <div style="font-size:11px;color:var(--text3);font-family:'JetBrains Mono',monospace;margin-bottom:10px;padding:8px 10px;background:var(--bg3);border-radius:6px;line-height:1.6">
+          Find these in your Supabase project:<br>
+          <b style="color:var(--text2)">URL</b> → Settings → API → Project URL<br>
+          <b style="color:var(--text2)">Anon Key</b> → Settings → API → Project API Keys → anon public
+        </div>
+        <div class="of"><label>Project URL</label><input id="sb-url" placeholder="https://xxxxxxxxxxxx.supabase.co" autocomplete="off" spellcheck="false"></div>
+        <div class="of"><label>Anon Key</label><input id="sb-key" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." autocomplete="off" spellcheck="false"></div>
+        <div id="setup-err" class="msg-err" style="display:none"></div>
+        <button class="btn-primary" id="btn-connect" onclick="connectSB()" style="margin-top:12px;width:100%">Connect & Launch →</button>
+        <div class="divider">or</div>
+        <button class="btn-ghost" onclick="demoMode()">Continue in Demo Mode</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LOGIN OVERLAY -->
+<div class="overlay" id="ov-login" style="display:none">
+  <div class="ov-card">
+    <div class="ov-head"><h2>Sign In</h2><p>National Postal Museum · Project Tracker</p></div>
+    <div class="ov-body">
+      <div class="tabs"><div class="tab on" id="t-si" onclick="setTab('si')">Sign In</div><div class="tab" id="t-su" onclick="setTab('su')">Sign Up</div></div>
+      <div class="of"><label>Email</label><input type="email" id="a-email" placeholder="you@company.com"></div>
+      <div class="of"><label>Password</label><input type="password" id="a-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doAuth()"></div>
+      <div id="auth-msg" class="msg-err"></div>
+      <button class="btn-primary" id="auth-btn" onclick="doAuth()" style="margin-top:4px">Sign In</button>
+      <div class="divider">or</div>
+      <button class="btn-ghost" onclick="demoMode()">Continue in Demo Mode</button>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT TASK MODAL -->
+<div class="modal-overlay" id="edit-modal">
+  <div class="modal">
+    <h3>Edit Task</h3>
+    <div class="of"><label>Task Name</label><input id="edit-name" placeholder="Task name"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div class="of"><label>Status</label>
+        <select id="edit-status">
+          <option value="not_started">Not Started</option>
+          <option value="in_progress">In Progress</option>
+          <option value="done">Done</option>
+          <option value="blocked">Blocked</option>
+        </select>
+      </div>
+      <div class="of"><label>Progress %</label><input type="number" id="edit-pct" min="0" max="100" placeholder="0"></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div class="of"><label>Workstream</label>
+        <select id="edit-ws">
+          <option value="Civil">Civil & Structure</option>
+          <option value="HVAC">HVAC</option>
+          <option value="Electrical">Electrical</option>
+          <option value="Fabrication">Fabrication</option>
+          <option value="Content">Content & Media</option>
+          <option value="Software">Software & Tech</option>
+        </select>
+      </div>
+      <div class="of"><label>Due Date</label><input type="date" id="edit-due"></div>
+    </div>
+    <div class="of"><label>Notes</label><textarea id="edit-notes" rows="2" placeholder="Any notes or blockers..."></textarea></div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-save" onclick="saveEdit()">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<header class="header">
+  <div class="h-logo">
+    <div class="h-stamp">📮</div>
+    <div>
+      <div class="h-title">National Postal Museum</div>
+      <div class="h-sub" id="h-sub">Project Progress Intelligence</div>
+    </div>
+  </div>
+  <div class="h-right">
+    <div class="sync-pill"><div class="sdot" id="sdot"></div><span id="stxt">Local</span></div>
+    <div class="h-user" id="h-user" style="display:none">
+      <div class="h-av" id="h-av">?</div>
+      <div class="h-email" id="h-email"></div>
+    </div>
+    <button class="btn-so" id="btn-so" style="display:none" onclick="signOut()">Sign out</button>
+  </div>
+</header>
+
+<nav class="nav-bar">
+  <div class="nav-tab on" data-tab="dashboard" onclick="showTab('dashboard')">📊 Dashboard</div>
+  <div class="nav-tab" data-tab="daily" onclick="showTab('daily')">📋 Daily Updates <span class="badge" id="badge-daily" style="background:var(--rg);color:var(--red)"></span></div>
+  <div class="nav-tab" data-tab="weekly" onclick="showTab('weekly')">🎯 Weekly Milestones</div>
+  <div class="nav-tab" data-tab="gantt" onclick="showTab('gantt')">📅 Gantt View</div>
+  <div class="nav-tab" data-tab="comments" onclick="showTab('comments')">💬 Comments <span class="badge" id="badge-comments" style="background:var(--bd);color:var(--blue)"></span></div>
+  <div class="nav-right">
+    <button id="btn-ws" class="btn-sm-ghost" onclick="openWsModal()">⚙️ Workstreams</button>
+    <button id="btn-add-update" class="btn-sm btn-red" onclick="showTab('daily');document.getElementById('add-form-section').scrollIntoView({behavior:'smooth'})">+ Add Update</button>
+    <button id="btn-share" class="btn-sm-ghost" onclick="shareReport()">📤 Share</button>
+  </div>
+</nav>
+
+<!-- WORKSTREAM MANAGER MODAL --><div class="modal-overlay" id="ws-modal">
+  <div class="modal" style="max-width:560px">
+    <h3>⚙️ Manage Workstreams</h3>
+    <div id="ws-list" style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;max-height:280px;overflow-y:auto"></div>
+    <div style="border-top:1px solid var(--b);padding-top:14px">
+      <div style="font-size:10px;font-weight:700;color:var(--text3);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.8px">Add New Workstream</div>
+      <div style="display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:end">
+        <div class="of" style="margin:0"><label>Name</label><input id="ws-new-name" placeholder="e.g. Plumbing" onkeydown="if(event.key==='Enter')addWsFromModal()"></div>
+        <div class="of" style="margin:0"><label>Icon</label>
+          <select id="ws-new-icon" style="padding:9px 8px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r3);font-size:16px;outline:none;cursor:pointer;width:70px">
+            <option>📋</option><option>🏗️</option><option>❄️</option><option>⚡</option><option>🔩</option>
+            <option>🎬</option><option>💻</option><option>🎨</option><option>📦</option><option>🔧</option>
+            <option>📐</option><option>🚿</option><option>🔌</option><option>🪟</option><option>🏠</option>
+            <option>🌿</option><option>🔐</option><option>📡</option><option>🎭</option><option>🖼️</option>
+          </select>
+        </div>
+        <button class="btn-save" onclick="addWsFromModal()" style="align-self:end;padding:9px 16px">+ Add</button>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeWsModal()">Done</button>
+    </div>
+  </div>
+</div>
+
+<!-- SHARE MODAL -->
+<div class="modal-overlay" id="share-banner" style="display:none;z-index:150">
+  <div class="modal" style="max-width:540px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+      <h3 style="margin-bottom:0">📤 Share with Client</h3>
+      <button onclick="document.getElementById('share-banner').style.display='none'" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:20px;line-height:1">×</button>
+    </div>
+    <p style="font-size:12px;color:var(--text3);font-family:'JetBrains Mono',monospace;margin-bottom:20px">Read-only live view for your client</p>
+
+    <div id="share-local-warning" style="display:none;background:var(--amber-dim);border:1px solid rgba(245,158,11,0.3);border-radius:8px;padding:12px 14px;margin-bottom:16px;font-size:12px;color:var(--amber);line-height:1.7">
+      <div style="font-weight:700;margin-bottom:6px">⚠️ You're running this file locally</div>
+      The share link below won't work for your client because it contains a <code style="background:rgba(245,158,11,0.1);padding:1px 5px;border-radius:3px">file://</code> path that only exists on your computer.<br><br>
+      <b>To generate a shareable link, host the file first:</b><br>
+      1. Upload <code style="background:rgba(245,158,11,0.1);padding:1px 5px;border-radius:3px">project_progress_tracker-fixed.html</code> to <a href="https://app.netlify.com/drop" target="_blank" style="color:var(--amber);text-decoration:underline">netlify.com/drop</a> (free, drag & drop, 30 sec)<br>
+      2. Use the Netlify URL instead of the file path below
+    </div>
+
+    <div id="share-hosted-row" style="display:none;margin-bottom:12px">
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin-bottom:6px">Your Hosted URL</div>
+      <input id="share-hosted-input" type="url" placeholder="https://zingy-dragon-ec712b.netlify.app"
+        style="width:100%;padding:9px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;font-size:12px;font-family:'JetBrains Mono',monospace;color:var(--text);outline:none;margin-bottom:8px"
+        oninput="refreshShareLink()" />
+      <div id="bake-row" style="background:var(--green-dim);border:1px solid rgba(34,197,94,0.25);border-radius:8px;padding:12px 14px;font-size:12px;color:var(--green);line-height:1.7">
+        <div style="font-weight:700;margin-bottom:4px">💡 Get a short WhatsApp-friendly link</div>
+        Click <b>Bake & Download</b> to save your Supabase credentials into the file. Re-upload that file to Netlify, and your share link becomes just:<br>
+        <code id="baked-preview" style="background:rgba(34,197,94,0.1);padding:2px 6px;border-radius:4px;font-size:11px;word-break:break-all"></code><br><br>
+        <button onclick="bakeAndDownload()" style="padding:8px 16px;background:var(--green);color:#fff;border:none;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif">⬇ Bake & Download</button>
+        <span style="font-size:10px;color:var(--green);margin-left:8px;font-family:'JetBrains Mono',monospace">Then re-upload to Netlify</span>
+      </div>
+    </div>
+    <div style="margin-bottom:14px">
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin-bottom:6px">Share Link</div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <div id="share-link-txt" style="flex:1;padding:10px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--text2);word-break:break-all;cursor:pointer;transition:border-color 0.15s" onclick="copyShareLink()" title="Click to copy"></div>
+        <button onclick="copyShareLink()" style="padding:10px 16px;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;font-family:'Plus Jakarta Sans',sans-serif;flex-shrink:0" id="copy-share-btn">Copy</button>
+      </div>
+      <div style="font-size:10px;color:var(--text3);margin-top:6px;font-family:'JetBrains Mono',monospace">Client sees a read-only live dashboard — no login required</div>
+    </div>
+
+    <div style="padding-top:14px;border-top:1px solid var(--border)">
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin-bottom:10px">Quick Hosting Options</div>
+      <div style="display:flex;gap:8px">
+        <a href="https://app.netlify.com/drop" target="_blank" style="flex:1;padding:10px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;text-align:center;text-decoration:none;transition:all 0.15s" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">
+          <div style="font-size:18px;margin-bottom:4px">🚀</div>
+          <div style="font-size:11px;font-weight:700;color:var(--text)">Netlify Drop</div>
+          <div style="font-size:10px;color:var(--text3)">Free · Drag & drop</div>
+        </a>
+        <a href="https://tiiny.host" target="_blank" style="flex:1;padding:10px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;text-align:center;text-decoration:none;transition:all 0.15s" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">
+          <div style="font-size:18px;margin-bottom:4px">⚡</div>
+          <div style="font-size:11px;font-weight:700;color:var(--text)">Tiiny.host</div>
+          <div style="font-size:10px;color:var(--text3)">Free · Instant URL</div>
+        </a>
+        <div onclick="copyLocalInstructions()" style="flex:1;padding:10px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;text-align:center;cursor:pointer;transition:all 0.15s" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">
+          <div style="font-size:18px;margin-bottom:4px">💻</div>
+          <div style="font-size:11px;font-weight:700;color:var(--text)">Local Server</div>
+          <div style="font-size:10px;color:var(--text3)" id="local-copy-lbl">Copy command</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DASHBOARD TAB -->
+<div id="tab-dashboard" class="page">
+  <div class="stats-row">
+    <div class="stat s1"><span class="stat-ico">📋</span><div class="stat-lbl">Total Tasks</div><div class="stat-val" id="st-total">0</div><div class="stat-note">across all streams</div></div>
+    <div class="stat s2"><span class="stat-ico">✅</span><div class="stat-lbl">Completed</div><div class="stat-val" id="st-done">0</div><div class="stat-note" id="st-done-pct">0% done</div></div>
+    <div class="stat s3"><span class="stat-ico">🔄</span><div class="stat-lbl">In Progress</div><div class="stat-val" id="st-ip">0</div><div class="stat-note">active tasks</div></div>
+    <div class="stat s4"><span class="stat-ico">🚫</span><div class="stat-lbl">Blocked</div><div class="stat-val" id="st-blocked">0</div><div class="stat-note" id="st-blocked-note">needs attention</div></div>
+    <div class="stat s5"><span class="stat-ico">🎯</span><div class="stat-lbl">Milestones</div><div class="stat-val" id="st-ms">0</div><div class="stat-note" id="st-ms-note">this week</div></div>
+    <div class="stat s6"><span class="stat-ico">💬</span><div class="stat-lbl">Comments</div><div class="stat-val" id="st-comments">0</div><div class="stat-note">total updates</div></div>
+  </div>
+
+  <div class="page-grid">
+    <div>
+      <div class="sec-head">
+        <div><div class="sec-title">Work Stream Progress</div><div class="sec-sub">Overall completion by discipline</div></div>
+      </div>
+      <div class="streams-grid" id="streams-grid"></div>
+
+      <div class="sec-head" style="margin-top:8px">
+        <div><div class="sec-title">Recent Updates</div><div class="sec-sub">Last 5 task changes</div></div>
+        <button class="btn-sm-ghost" onclick="showTab('daily')">View all</button>
+      </div>
+      <div class="task-list" id="recent-tasks"></div>
+    </div>
+
+    <div class="right-panel">
+      <div class="rp-card">
+        <div class="rp-head"><div class="rp-title">⚡ Overall Progress</div></div>
+        <div class="rp-body">
+          <div class="ring-wrap">
+            <svg width="130" height="130" viewBox="0 0 130 130" class="ring">
+              <circle class="ring-bg" cx="65" cy="65" r="54"/>
+              <circle class="ring-fill" id="ring-fill" cx="65" cy="65" r="54" stroke="var(--red)" stroke-dasharray="339.3" stroke-dashoffset="339.3"/>
+              <text class="ring-text" x="65" y="62" transform="rotate(90,65,65)" id="ring-pct">0%</text>
+              <text class="ring-sub" x="65" y="76" transform="rotate(90,65,65)">complete</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="rp-card">
+        <div class="rp-head"><div class="rp-title">🤖 Tagglabs Insights</div><div style="font-size:10px;color:var(--ink4);font-family:'DM Mono',monospace">Tagglabs Tagglabs AI · Live</div></div>
+        <div class="rp-body">
+          <div id="ai-insights"><div class="ai-ins i-info"><span class="aii">💡</span><span>Add tasks to see AI insights.</span></div></div>
+        </div>
+      </div>
+
+      <div class="rp-card">
+        <div class="rp-head"><div class="rp-title">💬 Ask Tagglabs</div></div>
+        <div class="rp-body" style="padding-bottom:0">
+          <div class="q-chips">
+            <span class="qchip" onclick="ask('What is blocked and needs urgent attention?')">What is blocked?</span>
+            <span class="qchip" onclick="ask('Which workstream is most behind schedule?')">Behind schedule?</span>
+            <span class="qchip" onclick="ask('Give me a client-ready status update')">Client update</span>
+          </div>
+          <div class="chat-msgs" id="chat-msgs"></div>
+          <div class="chat-inp-row">
+            <textarea class="chat-inp" id="cin" rows="2" placeholder="Ask about project progress…" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMsg()}"></textarea>
+            <button class="snd-btn" id="snd-btn" onclick="sendMsg()">↑</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DAILY UPDATES TAB -->
+<div id="tab-daily" class="page" style="display:none">
+  <div class="sec-head">
+    <div><div class="sec-title">Daily Updates</div><div class="sec-sub" id="today-date-label"></div></div>
+  </div>
+
+  <div class="add-form" id="add-form-section">
+    <div class="sec-head" style="margin-bottom:12px"><div class="sec-title" style="font-size:14px">+ Add Today's Update</div></div>
+    <div class="form-grid">
+      <div class="fg"><label>Task / Activity</label><input id="t-name" placeholder="e.g. HVAC ducting — Level 2 west wing"></div>
+      <div class="fg"><label>Work Stream</label>
+        <select id="t-ws">
+          <option value="Civil">Civil & Structure</option>
+          <option value="HVAC">HVAC</option>
+          <option value="Electrical">Electrical</option>
+          <option value="Fabrication">Fabrication</option>
+          <option value="Content">Content & Media</option>
+          <option value="Software">Software & Tech</option>
+        </select>
+      </div>
+      <div class="fg"><label>Status</label>
+        <select id="t-status">
+          <option value="in_progress">In Progress</option>
+          <option value="done">Done</option>
+          <option value="not_started">Not Started</option>
+          <option value="blocked">Blocked</option>
+        </select>
+      </div>
+      <div class="fg"><label>Progress %</label><input type="number" id="t-pct" placeholder="0" min="0" max="100"></div>
+      <div class="fg"><label>&nbsp;</label><button class="btn-add-task" onclick="addTask()">Add →</button></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px">
+      <div class="fg"><label>Due Date</label><input type="date" id="t-due"></div>
+      <div class="fg"><label>Notes / Blockers</label><input id="t-notes" placeholder="Any blockers or details…"></div>
+    </div>
+  </div>
+
+  <!-- Filter bar -->
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;flex-wrap:wrap">
+    <span style="font-size:12px;color:var(--ink4);font-family:'DM Mono',monospace">Filter:</span>
+    <div id="filter-bar" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+      <select id="f-ws-sel" onchange="filterTasks(this.value)" style="padding:6px 10px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r3);font-size:12px;color:var(--text3);outline:none;cursor:pointer;appearance:none;font-family:'Plus Jakarta Sans',sans-serif">
+        <option value="all">All Streams</option>
+      </select>
+      <select id="filter-status" onchange="filterTasks(currentFilter)" style="padding:6px 10px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r3);font-size:12px;color:var(--text3);outline:none;cursor:pointer;appearance:none;font-family:'Plus Jakarta Sans',sans-serif">
+        <option value="">All Statuses</option>
+        <option value="not_started">Not Started</option>
+        <option value="in_progress">In Progress</option>
+        <option value="done">Done</option>
+        <option value="blocked">Blocked</option>
+      </select>
+    </div>
+  </div><!-- end filter bar -->
+
+  <div class="task-list" id="task-list">
+    <div class="empty"><div class="empty-ico">📋</div><div class="empty-txt">No tasks yet</div><div class="empty-sub">Add your first daily update above</div></div>
+  </div>
+</div><!-- end tab-daily -->
+
+<!-- WEEKLY MILESTONES TAB -->
+<div id="tab-weekly" class="page" style="display:none;min-height:400px">
+
+  <!-- Header row -->
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+    <div>
+      <div style="font-size:18px;font-weight:800;color:var(--text)">Weekly Milestones</div>
+      <div style="font-size:11px;color:var(--text3);font-family:'JetBrains Mono',monospace;margin-top:3px">Track targets week by week</div>
+    </div>
+    <button id="btn-add-ms" onclick="toggleMsForm()" style="padding:10px 20px;background:var(--accent);color:#fff;border:none;border-radius:8px;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer">+ Add Milestone</button>
+  </div>
+
+  <!-- Add form (hidden by default) -->
+  <div id="ms-add-form" style="display:none;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:24px">
+    <div style="font-size:15px;font-weight:700;margin-bottom:18px;color:var(--text)">🎯 New Weekly Milestone</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:12px">
+      <div>
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin-bottom:6px">Week No.</div>
+        <input type="number" id="ms-week" min="1" value="1" style="width:100%;padding:10px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;font-size:13px;color:var(--text);font-family:'Plus Jakarta Sans',sans-serif;outline:none;box-sizing:border-box">
+      </div>
+      <div>
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin-bottom:6px">Workstream</div>
+        <select id="ms-ws" style="width:100%;padding:10px 12px;background:#F7F4EE;border:1px solid #D0CAC0;border-radius:6px;font-size:13px;color:#0C0C0C;font-family:'Bricolage Grotesque',sans-serif;outline:none;appearance:none;box-sizing:border-box"></select>
+      </div>
+      <div>
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin-bottom:6px">Start Date</div>
+        <input type="date" id="ms-start" style="width:100%;padding:10px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;font-size:13px;color:var(--text);font-family:'Plus Jakarta Sans',sans-serif;outline:none;box-sizing:border-box">
+      </div>
+      <div>
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin-bottom:6px">End Date</div>
+        <input type="date" id="ms-end" style="width:100%;padding:10px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;font-size:13px;color:var(--text);font-family:'Plus Jakarta Sans',sans-serif;outline:none;box-sizing:border-box">
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;align-items:flex-end">
+      <div style="flex:1">
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin-bottom:6px">Milestone / Target</div>
+        <input type="text" id="ms-desc" placeholder="e.g. Complete all HVAC ducting on Level 1" onkeydown="if(event.key==='Enter')addMilestone()" style="width:100%;padding:10px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;font-size:13px;color:var(--text);font-family:'Plus Jakarta Sans',sans-serif;outline:none;box-sizing:border-box">
+      </div>
+      <button onclick="addMilestone()" style="padding:10px 22px;background:var(--accent);color:#fff;border:none;border-radius:6px;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0">Add →</button>
+      <button onclick="toggleMsForm()" style="padding:10px 16px;background:transparent;border:1px solid var(--border2);border-radius:6px;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;color:var(--text3);cursor:pointer;flex-shrink:0">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Milestones list -->
+  <div id="weekly-list">
+    <div style="text-align:center;padding:60px 20px;color:var(--text3)">
+      <div style="font-size:32px;margin-bottom:10px">🎯</div>
+      <div style="font-size:14px;font-weight:600;color:var(--text3);margin-bottom:4px">No milestones yet</div>
+      <div style="font-size:11px;font-family:'JetBrains Mono',monospace">Click "+ Add Milestone" to get started</div>
+    </div>
+  </div>
+</div>
+
+<!-- GANTT TAB -->
+<div id="tab-gantt" class="page" style="display:none">
+  <div class="sec-head">
+    <div><div class="sec-title">Gantt View</div><div class="sec-sub">Timeline across all work streams</div></div>
+  </div>
+  <div class="gantt-wrap" id="gantt-wrap">
+    <div class="empty" style="padding:60px"><div class="empty-ico">📅</div><div class="empty-txt">No tasks to display</div><div class="empty-sub">Add tasks with due dates to see the Gantt chart</div></div>
+  </div>
+</div>
+
+<!-- COMMENTS TAB -->
+<div id="tab-comments" class="page" style="display:none">
+  <div class="sec-head">
+    <div><div class="sec-title">Comments & Followups</div><div class="sec-sub">All team and client communications</div></div>
+  </div>
+  <div class="page-grid">
+    <div>
+      <div style="background:var(--surface);border:1px solid var(--b);border-radius:var(--r);padding:20px">
+        <div id="comments-list">
+          <div class="empty"><div class="empty-ico">💬</div><div class="empty-txt">No comments yet</div><div class="empty-sub">Be the first to add an update</div></div>
+        </div>
+        <div class="comment-input-area">
+          <div style="display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap">
+            <select id="c-ws" style="padding:6px 10px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r3);font-size:12px;color:var(--text3);outline:none;font-family:'Plus Jakarta Sans',sans-serif;appearance:none">
+              <option value="">General</option>
+              <option value="Civil">Civil</option>
+              <option value="HVAC">HVAC</option>
+              <option value="Electrical">Electrical</option>
+              <option value="Fabrication">Fabrication</option>
+              <option value="Content">Content</option>
+              <option value="Software">Software</option>
+            </select>
+            <input id="c-name" placeholder="Your name" style="padding:6px 10px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r3);font-size:12px;color:var(--text);outline:none;font-family:'Plus Jakarta Sans',sans-serif;flex:1;min-width:120px">
+            <select id="c-role" style="padding:6px 10px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r3);font-size:12px;color:var(--text3);outline:none;font-family:'Plus Jakarta Sans',sans-serif;appearance:none">
+              <option value="team">Team</option>
+              <option value="client">Client</option>
+              <option value="pm">PM</option>
+              <option value="contractor">Contractor</option>
+            </select>
+          </div>
+          <textarea class="comment-input" id="c-text" placeholder="Add a comment or followup as client…" rows="3"></textarea>
+          <div class="comment-foot">
+            <span style="font-size:11px;color:var(--ink4);font-family:'DM Mono',monospace">Comments are visible to all collaborators</span>
+            <button class="btn-sm btn-red" onclick="addComment()">Post Comment</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="right-panel">
+      <div class="rp-card">
+        <div class="rp-head"><div class="rp-title">📊 Comment Stats</div></div>
+        <div class="rp-body" id="comment-stats">
+          <div style="font-size:12px;color:var(--text3)">No comments yet.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ADD MILESTONE MODAL -->
+
+<script>
+// ─── CONSTANTS ───────────────────────────────────────────────────────────
+const WS_PALETTE=[
+  {color:'#C73B1E',bg:'rgba(199,59,30,0.1)'},{color:'#1A5FA8',bg:'rgba(26,95,168,0.1)'},
+  {color:'#C27A0E',bg:'rgba(194,122,14,0.1)'},{color:'#6B35B8',bg:'rgba(107,53,184,0.1)'},
+  {color:'#1A7A4A',bg:'rgba(26,122,74,0.1)'},{color:'#0E7A6B',bg:'rgba(14,122,107,0.1)'},
+  {color:'#B8550E',bg:'rgba(184,85,14,0.1)'},{color:'#7A1A5F',bg:'rgba(122,26,95,0.1)'},
+];
+const WS_ICONS=['🏗️','❄️','⚡','🔩','🎬','💻','🎨','📦','🔧','📐','🚿','🔌'];
+
+let WS_CONFIG={
+  Civil:{color:'#C73B1E',bg:'rgba(199,59,30,0.1)',icon:'🏗️'},
+  HVAC:{color:'#1A5FA8',bg:'rgba(26,95,168,0.1)',icon:'❄️'},
+  Electrical:{color:'#C27A0E',bg:'rgba(194,122,14,0.1)',icon:'⚡'},
+  Fabrication:{color:'#6B35B8',bg:'rgba(107,53,184,0.1)',icon:'🔩'},
+  Content:{color:'#1A7A4A',bg:'rgba(26,122,74,0.1)',icon:'🎬'},
+  Software:{color:'#0E7A6B',bg:'rgba(14,122,107,0.1)',icon:'💻'}
+};
+
+function loadWorkstreams(){
+  const saved=localStorage.getItem('spt_ws');
+  if(saved){try{WS_CONFIG=JSON.parse(saved);}catch{}}
+}
+function saveWorkstreams(){
+  localStorage.setItem('spt_ws',JSON.stringify(WS_CONFIG));
+}
+function addWorkstream(name,icon){
+  if(!name||WS_CONFIG[name])return false;
+  const idx=Object.keys(WS_CONFIG).length%WS_PALETTE.length;
+  WS_CONFIG[name]={...WS_PALETTE[idx],icon:icon||'📋'};
+  saveWorkstreams();syncAllWsDropdowns();renderDashboard();
+  return true;
+}
+function deleteWorkstream(name){
+  if(!confirm(`Delete workstream "${name}"? Tasks using it will keep the label but lose the colour.`))return;
+  delete WS_CONFIG[name];
+  saveWorkstreams();syncAllWsDropdowns();renderDashboard();
+}
+function syncAllWsDropdowns(){
+  const wsList=Object.keys(WS_CONFIG);
+  // Task dropdowns (no extra option)
+  ['t-ws','edit-ws'].forEach(id=>{
+    const el=document.getElementById(id);if(!el)return;
+    const cur=el.value;
+    el.innerHTML=wsList.map(w=>`<option value="${w}"${w===cur?' selected':''}>${WS_CONFIG[w].icon} ${w}</option>`).join('');
+  });
+  // Milestone dropdown (with General option)
+  const msEl=document.getElementById('ms-ws');
+  if(msEl){
+    const cur=msEl.value;
+    msEl.innerHTML=wsList.map(w=>`<option value="${w}"${w===cur?' selected':''}>${WS_CONFIG[w].icon} ${w}</option>`).join('')+'<option value="General">📋 General</option>';
+  }
+  // Comment dropdown (with General option)
+  const cEl=document.getElementById('c-ws');
+  if(cEl){
+    const cur=cEl.value;
+    cEl.innerHTML='<option value="">General</option>'+wsList.map(w=>`<option value="${w}"${w===cur?' selected':''}>${WS_CONFIG[w].icon} ${w}</option>`).join('');
+  }
+  // Filter dropdown
+  const fEl=document.getElementById('f-ws-sel');
+  if(fEl){
+    const cur=fEl.value;
+    fEl.innerHTML='<option value="all">All Streams</option>'+wsList.map(w=>`<option value="${w}"${w===cur?' selected':''}>${WS_CONFIG[w].icon} ${w}</option>`).join('');
+  }
+}
+const STATUS_CONFIG={
+  not_started:{label:'Not Started',color:'#888',bg:'#F5F5F5'},
+  in_progress:{label:'In Progress',color:'#1A5FA8',bg:'rgba(26,95,168,0.1)'},
+  done:{label:'Done',color:'#1A7A4A',bg:'rgba(26,122,74,0.1)'},
+  blocked:{label:'Blocked',color:'#C73B1E',bg:'rgba(199,59,30,0.1)'}
+};
+const genId=()=>Date.now().toString(36)+Math.random().toString(36).slice(2);
+const fmt=d=>new Date(d).toLocaleDateString('en-IN',{day:'numeric',month:'short'});
+
+// ─── STATE ────────────────────────────────────────────────────────────────
+let tasks=[],milestones=[],comments=[];
+let sbUrl='',sbKey='',sbToken='',isReadOnly=false;
+// Baked-in client credentials (set when you save from Share modal)
+const BAKED_URL='';
+const BAKED_KEY='';
+let currentUser=null,isDemo=false,currentFilter='all',editingId=null;
+
+// ─── DEMO DATA ────────────────────────────────────────────────────────────
+const DEMO_TASKS=[
+  {id:'t1',name:'Foundation waterproofing — Basement level',workstream:'Civil',status:'done',pct:100,week_num:1,due_date:'2026-04-25',notes:'Completed ahead of schedule'},
+  {id:'t2',name:'HVAC main duct installation — Ground floor',workstream:'HVAC',status:'in_progress',pct:65,week_num:2,due_date:'2026-05-02',notes:''},
+  {id:'t3',name:'Electrical conduit laying — Exhibit hall A',workstream:'Electrical',status:'in_progress',pct:40,week_num:2,due_date:'2026-05-05',notes:'Waiting for conduit delivery'},
+  {id:'t4',name:'Display cabinet fabrication — Batch 1',workstream:'Fabrication',status:'blocked',pct:20,week_num:2,due_date:'2026-05-08',notes:'Material approval pending from client'},
+  {id:'t5',name:'Exhibit content — Philatelic history section',workstream:'Content',status:'in_progress',pct:55,week_num:2,due_date:'2026-05-10',notes:''},
+  {id:'t6',name:'Interactive kiosk software — v1',workstream:'Software',status:'in_progress',pct:30,week_num:3,due_date:'2026-05-15',notes:''},
+  {id:'t7',name:'Ceiling plastering — Level 1',workstream:'Civil',status:'in_progress',pct:75,week_num:2,due_date:'2026-05-03',notes:''},
+  {id:'t8',name:'LED lighting installation plan finalized',workstream:'Electrical',status:'done',pct:100,week_num:1,due_date:'2026-04-28',notes:''},
+];
+const DEMO_MS=[
+  {id:'m1',week_num:1,week_label:'Week 1',start_date:'2026-04-21',end_date:'2026-04-27',description:'Complete all basement waterproofing and foundation inspections',workstream:'Civil',done:true,blocked:false},
+  {id:'m2',week_num:1,week_label:'Week 1',start_date:'2026-04-21',end_date:'2026-04-27',description:'Finalize electrical layout drawings and get client approval',workstream:'Electrical',done:true,blocked:false},
+  {id:'m3',week_num:2,week_label:'Week 2',start_date:'2026-04-28',end_date:'2026-05-04',description:'HVAC main trunk lines installed on ground floor',workstream:'HVAC',done:false,blocked:false},
+  {id:'m4',week_num:2,week_label:'Week 2',start_date:'2026-04-28',end_date:'2026-05-04',description:'Display cabinet material approval from client',workstream:'Fabrication',done:false,blocked:true},
+  {id:'m5',week_num:3,week_label:'Week 3',start_date:'2026-05-05',end_date:'2026-05-11',description:'All exhibit content for Section A delivered and reviewed',workstream:'Content',done:false,blocked:false},
+];
+const DEMO_COMMENTS=[
+  {id:'c1',task_id:null,author_name:'Siddhant Batra',author_email:'siddhant@tagglabs.in',author_role:'pm',content:'Site visit completed today. Civil work on track, HVAC team has started but needs 2 more crew members for Level 2.',workstream:'HVAC',created_at:new Date(Date.now()-86400000*2).toISOString()},
+  {id:'c2',task_id:'t4',author_name:'Client - DoP',author_email:'client@dop.in',author_role:'client',content:'Please share the material samples for display cabinets before proceeding. We need to approve the finish and colour.',workstream:'Fabrication',created_at:new Date(Date.now()-86400000).toISOString()},
+  {id:'c3',task_id:null,author_name:'Siddhant Batra',author_email:'siddhant@tagglabs.in',author_role:'pm',content:'Material samples for cabinets have been ordered and will be presented in the next site meeting on May 3rd.',workstream:'Fabrication',created_at:new Date(Date.now()-3600000*3).toISOString()},
+];
+
+// ─── SUPABASE ─────────────────────────────────────────────────────────────
+function sbH(){return{'Content-Type':'application/json','apikey':sbKey,'Authorization':'Bearer '+(sbToken||sbKey),'Prefer':'return=representation'};}
+async function sbSel(t){const r=await fetch(`${sbUrl}/rest/v1/${t}?select=*&order=created_at`,{headers:sbH()});if(!r.ok)throw new Error(r.status+':'+await r.text());return r.json();}
+async function sbUps(t,row){const r=await fetch(`${sbUrl}/rest/v1/${t}`,{method:'POST',headers:{...sbH(),'Prefer':'resolution=merge-duplicates,return=representation'},body:JSON.stringify(row)});if(!r.ok)throw new Error(r.status+':'+await r.text());return r.json();}
+async function sbDel(t,id){const r=await fetch(`${sbUrl}/rest/v1/${t}?id=eq.${encodeURIComponent(id)}`,{method:'DELETE',headers:sbH()});if(!r.ok)throw new Error(r.status+':'+await r.text());}
+async function sbPatch(t,id,data){const r=await fetch(`${sbUrl}/rest/v1/${t}?id=eq.${encodeURIComponent(id)}`,{method:'PATCH',headers:sbH(),body:JSON.stringify(data)});if(!r.ok)throw new Error(r.status+':'+await r.text());}
+async function sbSignIn(e,p){const r=await fetch(`${sbUrl}/auth/v1/token?grant_type=password`,{method:'POST',headers:sbH(),body:JSON.stringify({email:e,password:p})});const d=await r.json();if(!r.ok)throw new Error(d.error_description||d.msg||'Sign in failed');return d;}
+async function sbSignUp(e,p){const r=await fetch(`${sbUrl}/auth/v1/signup`,{method:'POST',headers:sbH(),body:JSON.stringify({email:e,password:p})});const d=await r.json();if(!r.ok)throw new Error(d.msg||d.error||'Sign up failed');return d;}
+async function sbUser(tok){const r=await fetch(`${sbUrl}/auth/v1/user`,{headers:{...sbH(),'Authorization':'Bearer '+tok}});if(!r.ok)return null;return r.json();}
+async function sbPing(){
+  // First try REST health — if tables don't exist yet, give a helpful message
+  const r=await fetch(`${sbUrl}/rest/v1/site_tasks?select=id&limit=1`,{headers:sbH()});
+  if(!r.ok){
+    const body=await r.text();
+    if(r.status===401||r.status===403)throw new Error('Invalid Anon Key — check you copied the full key from Supabase → Project Settings → API');
+    if(r.status===404||body.includes('does not exist')||body.includes('relation'))throw new Error('Tables not found — run the SQL from Step 1 in your Supabase SQL Editor first, then try again');
+    if(r.status===0||r.status>=500)throw new Error('Cannot reach Supabase — check your Project URL is correct (e.g. https://xxxx.supabase.co)');
+    throw new Error(r.status+': '+body.slice(0,120));
+  }
+}
+
+// ─── SETUP ────────────────────────────────────────────────────────────────
+async function connectSB(){
+  const url=document.getElementById('sb-url').value.trim().replace(/\/$/,'');
+  const key=document.getElementById('sb-key').value.trim();
+  const errEl=document.getElementById('setup-err'),btn=document.getElementById('btn-connect');
+  errEl.style.display='none';
+  if(!url||!key){showSetupErr('Please enter URL and key.');return;}
+  if(!url.startsWith('https://')){showSetupErr('URL must start with https://');return;}
+  if(window.location.protocol==='file:'){showSetupErr('⚠️ Running from a local file — Supabase requests are blocked by browser security. Please open this file via a local server. Easiest fix: drag the file into a tab in Chrome/Safari, or run: python3 -m http.server 8080 in Terminal and open http://localhost:8080');return;}
+  btn.disabled=true;btn.textContent='Connecting…';
+  sbUrl=url;sbKey=key;
+  try{
+    await sbPing();
+    localStorage.setItem('spt_url',url);localStorage.setItem('spt_key',key);
+    document.getElementById('ov-setup').style.display='none';
+    document.getElementById('ov-login').style.display='flex';
+    setSyncStatus('live');document.getElementById('h-sub').textContent='Supabase · Live';
+    const st=localStorage.getItem('spt_token');
+    if(st){const u=await sbUser(st);if(u&&u.email){sbToken=st;loginSuccess(u);return;}}
+  }catch(e){showSetupErr('❌ '+e.message);btn.disabled=false;btn.textContent='Connect & Launch →';sbUrl='';sbKey='';}
+}
+function showSetupErr(m){const e=document.getElementById('setup-err');e.textContent=m;e.style.display='block';}
+function demoMode(){
+  isDemo=true;tasks=JSON.parse(JSON.stringify(DEMO_TASKS));milestones=JSON.parse(JSON.stringify(DEMO_MS));comments=JSON.parse(JSON.stringify(DEMO_COMMENTS));
+  document.getElementById('ov-setup').style.display='none';document.getElementById('ov-login').style.display='none';
+  document.getElementById('h-sub').textContent='Demo Mode';setSyncStatus('local');
+  renderAll();
+}
+
+// ─── AUTH ─────────────────────────────────────────────────────────────────
+let authTab='si';
+function setTab(t){authTab=t;document.getElementById('t-si').className='tab'+(t==='si'?' on':'');document.getElementById('t-su').className='tab'+(t==='su'?' on':'');document.getElementById('auth-btn').textContent=t==='si'?'Sign In':'Create Account';document.getElementById('auth-msg').style.display='none';}
+async function doAuth(){
+  const email=document.getElementById('a-email').value.trim(),pass=document.getElementById('a-pass').value;
+  const btn=document.getElementById('auth-btn');
+  if(!email||!pass){showAuthMsg('Enter email and password.','err');return;}
+  btn.disabled=true;btn.textContent='Please wait…';
+  try{
+    if(authTab==='su'){const d=await sbSignUp(email,pass);if(d.access_token){sbToken=d.access_token;localStorage.setItem('spt_token',sbToken);loginSuccess(d.user||{email});}else{showAuthMsg('✅ Check your email to confirm, then sign in.','ok');btn.disabled=false;btn.textContent='Create Account';}}
+    else{const d=await sbSignIn(email,pass);sbToken=d.access_token;localStorage.setItem('spt_token',sbToken);loginSuccess(d.user||{email});}
+  }catch(e){showAuthMsg('❌ '+e.message,'err');btn.disabled=false;btn.textContent=authTab==='si'?'Sign In':'Create Account';}
+}
+function showAuthMsg(m,t){const el=document.getElementById('auth-msg');el.textContent=m;el.className=t==='ok'?'msg-ok':'msg-err';el.style.display='block';}
+async function loginSuccess(user){
+  currentUser=user;
+  document.getElementById('h-av').textContent=(user.email||'?')[0].toUpperCase();
+  document.getElementById('h-email').textContent=user.email||'';
+  try{
+    await loadFromSB();
+    document.getElementById('ov-login').style.display='none';
+    document.getElementById('h-user').style.display='flex';document.getElementById('btn-so').style.display='block';
+    renderAll();
+  }catch(e){
+    const hint=e.message.includes('42501')||e.message.toLowerCase().includes('permission')
+      ?'Check your Supabase RLS policies — authenticated users need SELECT access.'
+      :e.message.includes('404')||e.message.toLowerCase().includes('relation')
+      ?'Tables not found. Make sure site_tasks, weekly_milestones, and site_comments exist in Supabase.'
+      :'Could not load data: '+e.message;
+    showAuthMsg('✅ Signed in, but '+hint,'err');
+    const btn=document.getElementById('auth-btn');btn.disabled=false;btn.textContent='Sign In';
+  }
+}
+function signOut(){sbToken='';localStorage.removeItem('spt_token');currentUser=null;document.getElementById('h-user').style.display='none';document.getElementById('btn-so').style.display='none';document.getElementById('ov-login').style.display='flex';}
+
+// ─── DATA ─────────────────────────────────────────────────────────────────
+async function loadFromSB(){
+  if(!sbUrl)return;
+  try{const[t,m,c]=await Promise.all([sbSel('site_tasks'),sbSel('weekly_milestones'),sbSel('site_comments')]);tasks=t||[];milestones=m||[];comments=c||[];setSyncStatus('live');}
+  catch(e){console.warn('Load failed',e);setSyncStatus('local');throw new Error('Data load failed: '+e.message);}
+}
+function setSyncStatus(s){const d=document.getElementById('sdot'),t=document.getElementById('stxt');if(s==='live'){d.className='sdot live';t.textContent='Live sync';}else if(s==='saving'){d.className='sdot saving';t.textContent='Saving…';}else{d.className='sdot';t.textContent='Local only';}}
+
+async function saveTask(task){setSyncStatus('saving');if(sbUrl){try{await sbUps('site_tasks',task);}catch(e){console.warn(e);}}setSyncStatus(sbUrl?'live':'local');}
+async function deleteTask(id){setSyncStatus('saving');if(sbUrl){try{await sbDel('site_tasks',id);}catch(e){console.warn(e);}}setSyncStatus(sbUrl?'live':'local');}
+async function saveMilestone(ms){setSyncStatus('saving');if(sbUrl){try{await sbUps('weekly_milestones',ms);}catch(e){console.warn(e);}}setSyncStatus(sbUrl?'live':'local');}
+async function deleteMilestone(id){setSyncStatus('saving');if(sbUrl){try{await sbDel('weekly_milestones',id);}catch(e){console.warn(e);}}setSyncStatus(sbUrl?'live':'local');}
+async function saveComment(c){setSyncStatus('saving');if(sbUrl){try{await sbUps('site_comments',c);}catch(e){console.warn(e);}}setSyncStatus(sbUrl?'live':'local');}
+async function deleteCommentDB(id){setSyncStatus('saving');if(sbUrl){try{await sbDel('site_comments',id);}catch(e){console.warn(e);}}setSyncStatus(sbUrl?'live':'local');}
+async function deleteCommentUI(id){
+  if(!confirm('Delete this comment and all its replies?'))return;
+  // Remove comment and all replies that reference it as parent
+  comments=comments.filter(c=>c.id!==id&&c.parent_id!==id);
+  renderComments();updateBadges();
+  await deleteCommentDB(id);
+  // Also delete replies from DB
+  const replyIds=comments.filter(c=>c.parent_id===id).map(c=>c.id);
+  for(const rid of replyIds)await deleteCommentDB(rid);
+}
+async function deleteReplyUI(id){
+  if(!confirm('Delete this reply?'))return;
+  comments=comments.filter(c=>c.id!==id);
+  renderComments();updateBadges();
+  await deleteCommentDB(id);
+}
+async function patchMilestone(id,data){setSyncStatus('saving');if(sbUrl){try{await sbPatch('weekly_milestones',id,data);}catch(e){console.warn(e);}}setSyncStatus(sbUrl?'live':'local');}
+async function patchTask(id,data){setSyncStatus('saving');if(sbUrl){try{await sbPatch('site_tasks',id,data);}catch(e){console.warn(e);}}setSyncStatus(sbUrl?'live':'local');}
+
+// ─── RENDER ALL ───────────────────────────────────────────────────────────
+function renderAll(){
+  try{syncAllWsDropdowns();}catch(e){console.error('syncAllWsDropdowns error:',e);}
+  try{renderDashboard();}catch(e){console.error('renderDashboard error:',e);}
+  try{renderTasks();}catch(e){console.error('renderTasks error:',e);}
+  try{renderWeekly();}catch(e){console.error('renderWeekly error:',e);}
+  try{renderGantt();}catch(e){console.error('renderGantt error:',e);}
+  try{renderComments();}catch(e){console.error('renderComments error:',e);}
+  try{updateBadges();}catch(e){console.error('updateBadges error:',e);}
+}
+
+// ─── DASHBOARD ────────────────────────────────────────────────────────────
+function renderDashboard(){
+  const total=tasks.length,done=tasks.filter(t=>t.status==='done').length;
+  const ip=tasks.filter(t=>t.status==='in_progress').length,blocked=tasks.filter(t=>t.status==='blocked').length;
+  const avgPct=tasks.length?Math.round(tasks.reduce((s,t)=>s+Number(t.pct),0)/tasks.length):0;
+  document.getElementById('st-total').textContent=total;
+  document.getElementById('st-done').textContent=done;
+  document.getElementById('st-done-pct').textContent=total?Math.round(done/total*100)+'% done':'0% done';
+  document.getElementById('st-ip').textContent=ip;
+  document.getElementById('st-blocked').textContent=blocked;
+  document.getElementById('st-blocked-note').textContent=blocked>0?'⚠ needs attention':'all clear';
+  document.getElementById('st-ms').textContent=milestones.filter(m=>!m.done).length;
+  document.getElementById('st-ms-note').textContent='pending milestones';
+  document.getElementById('st-comments').textContent=comments.length;
+
+  // Ring
+  const circ=339.3,offset=circ-(circ*avgPct/100);
+  document.getElementById('ring-fill').style.strokeDashoffset=offset;
+  document.getElementById('ring-pct').textContent=avgPct+'%';
+
+  // Streams
+  const grid=document.getElementById('streams-grid');grid.innerHTML='';
+  Object.entries(WS_CONFIG).forEach(([ws,cfg])=>{
+    const wsTasks=tasks.filter(t=>t.workstream===ws);
+    const wsAvg=wsTasks.length?Math.round(wsTasks.reduce((s,t)=>s+Number(t.pct),0)/wsTasks.length):0;
+    const wsBlocked=wsTasks.filter(t=>t.status==='blocked').length;
+    const wsDone=wsTasks.filter(t=>t.status==='done').length;
+    const card=document.createElement('div');card.className='stream-card';
+    card.innerHTML=`<div class="sc-head"><div class="sc-ico" style="background:${cfg.bg}">${cfg.icon}</div><div class="sc-pct" style="color:${cfg.color}">${wsAvg}%</div></div>
+      <div class="sc-name">${ws==='Civil'?'Civil & Structure':ws==='Content'?'Content & Media':ws==='Software'?'Software & Tech':ws}</div>
+      <div class="sc-status">${wsTasks.length} tasks${wsBlocked>0?` · <span style="color:var(--red)">⚠ ${wsBlocked} blocked</span>`:''}</div>
+      <div class="sc-bar-bg"><div class="sc-bar-fill" style="width:${wsAvg}%;background:${cfg.color}"></div></div>
+      <div class="sc-meta"><span>${wsDone} done</span><span>${wsTasks.length-wsDone} remaining</span></div>`;
+    grid.appendChild(card);
+  });
+
+  // Recent tasks
+  const recent=document.getElementById('recent-tasks');recent.innerHTML='';
+  const sorted=[...tasks].sort((a,b)=>new Date(b.created_at||0)-new Date(a.created_at||0)).slice(0,5);
+  if(!sorted.length){recent.innerHTML='<div class="empty"><div class="empty-ico">📋</div><div class="empty-txt">No tasks yet</div></div>';return;}
+  sorted.forEach(t=>recent.appendChild(buildTaskEl(t)));
+
+  // AI insights
+  genInsights();
+}
+
+// ─── TASKS ────────────────────────────────────────────────────────────────
+function renderTasks(){
+  const list=document.getElementById('task-list');list.innerHTML='';
+  const statusFilter=document.getElementById('filter-status').value;
+  let filtered=tasks.filter(t=>currentFilter==='all'||t.workstream===currentFilter);
+  if(statusFilter)filtered=filtered.filter(t=>t.status===statusFilter);
+  filtered.sort((a,b)=>{const o={blocked:0,in_progress:1,not_started:2,done:3};return(o[a.status]||2)-(o[b.status]||2);});
+  if(!filtered.length){list.innerHTML='<div class="empty"><div class="empty-ico">📋</div><div class="empty-txt">No tasks match this filter</div></div>';return;}
+  filtered.forEach(t=>list.appendChild(buildTaskEl(t)));
+}
+
+function buildTaskEl(t){
+  const cfg=WS_CONFIG[t.workstream]||{color:'#888',bg:'#F5F5F5',icon:'📋'};
+  const sc=STATUS_CONFIG[t.status]||STATUS_CONFIG.not_started;
+  const el=document.createElement('div');el.className='task-item';
+  el.innerHTML=`
+    <div class="task-row1">
+      <span class="task-ws" style="background:${cfg.bg};color:${cfg.color}">${cfg.icon} ${t.workstream}</span>
+      <span class="task-name">${t.name}</span>
+      <span class="bdg" style="background:${sc.bg};color:${sc.color};border:1px solid ${sc.color}22;font-family:'DM Mono',monospace;font-size:10px;padding:2px 7px;border-radius:4px">${sc.label}</span>
+    </div>
+    <div class="task-row2">
+      <div class="pct-wrap">
+        <div class="pct-bar"><div class="pct-fill" style="width:${t.pct}%;background:${cfg.color}"></div></div>
+        <span class="pct-lbl">${t.pct}%</span>
+      </div>
+      ${t.due_date?`<span class="task-date">Due ${fmt(t.due_date)}</span>`:''}
+    </div>
+    ${t.notes?`<div style="font-size:12px;color:var(--ink4);margin-top:6px;padding:6px 10px;background:var(--cream);border-radius:4px;border-left:2px solid ${cfg.color}">${t.notes}</div>`:''}
+    <div class="task-actions">
+      <button class="task-btn" onclick="openEditModal('${t.id}')">✏️ Edit</button>
+      <button class="task-btn" onclick="quickStatus('${t.id}','done')">✅ Mark Done</button>
+      <button class="task-btn" onclick="quickStatus('${t.id}','blocked')">🚫 Mark Blocked</button>
+      <button class="task-btn del" onclick="deleteTaskUI('${t.id}')">✕ Delete</button>
+    </div>`;
+  return el;
+}
+
+function renderFilterBar(){
+  const sel=document.getElementById('f-ws-sel');if(!sel)return;
+  const cur=sel.value;
+  sel.innerHTML='<option value="all">All Streams</option>'+Object.keys(WS_CONFIG).map(w=>`<option value="${w}"${w===cur?' selected':''}>${WS_CONFIG[w].icon} ${w}</option>`).join('');
+}
+
+function filterTasks(ws){
+  currentFilter=ws||'all';
+  renderTasks();
+}
+
+async function addTask(){
+  const name=document.getElementById('t-name').value.trim();
+  if(!name){alert('Please enter a task name.');return;}
+  const task={id:genId(),name,workstream:document.getElementById('t-ws').value,status:document.getElementById('t-status').value,pct:parseInt(document.getElementById('t-pct').value)||0,week_num:1,due_date:document.getElementById('t-due').value,notes:document.getElementById('t-notes').value,created_at:new Date().toISOString()};
+  tasks.unshift(task);
+  document.getElementById('t-name').value='';document.getElementById('t-pct').value='';document.getElementById('t-due').value='';document.getElementById('t-notes').value='';
+  renderAll();await saveTask(task);
+}
+
+async function quickStatus(id,status){
+  const t=tasks.find(x=>x.id===id);if(!t)return;
+  t.status=status;if(status==='done')t.pct=100;
+  renderAll();await patchTask(id,{status,pct:t.pct});
+}
+
+async function deleteTaskUI(id){
+  if(!confirm('Delete this task?'))return;
+  tasks=tasks.filter(t=>t.id!==id);renderAll();await deleteTask(id);
+}
+
+// ─── EDIT MODAL ───────────────────────────────────────────────────────────
+function openEditModal(id){
+  const t=tasks.find(x=>x.id===id);if(!t)return;
+  editingId=id;
+  document.getElementById('edit-name').value=t.name;
+  document.getElementById('edit-status').value=t.status;
+  document.getElementById('edit-pct').value=t.pct;
+  document.getElementById('edit-ws').value=t.workstream;
+  document.getElementById('edit-due').value=t.due_date||'';
+  document.getElementById('edit-notes').value=t.notes||'';
+  document.getElementById('edit-modal').className='modal-overlay open';
+}
+function closeModal(){document.getElementById('edit-modal').className='modal-overlay';editingId=null;}
+async function saveEdit(){
+  const t=tasks.find(x=>x.id===editingId);if(!t)return;
+  t.name=document.getElementById('edit-name').value.trim();
+  t.status=document.getElementById('edit-status').value;
+  t.pct=parseInt(document.getElementById('edit-pct').value)||0;
+  t.workstream=document.getElementById('edit-ws').value;
+  t.due_date=document.getElementById('edit-due').value;
+  t.notes=document.getElementById('edit-notes').value;
+  closeModal();renderAll();await saveTask(t);
+}
+
+// ─── WEEKLY MILESTONES ────────────────────────────────────────────────────
+function renderWeekly(){
+  const list=document.getElementById('weekly-list');list.innerHTML='';
+  if(!milestones.length){list.innerHTML='<div class="empty"><div class="empty-ico">🎯</div><div class="empty-txt">No milestones yet</div><div class="empty-sub">Click "+ Add Milestone" to get started</div></div>';return;}
+  const byWeek={};
+  milestones.forEach(m=>{if(!byWeek[m.week_num])byWeek[m.week_num]=[];byWeek[m.week_num].push(m);});
+  Object.entries(byWeek).sort((a,b)=>a[0]-b[0]).forEach(([wn,items])=>{
+    const total=items.length,done=items.filter(m=>m.done).length,pct=total?Math.round(done/total*100):0;
+    const sample=items[0];
+    const card=document.createElement('div');card.className='week-card';
+    const dateRange=sample.start_date&&sample.end_date?`${fmt(sample.start_date)} – ${fmt(sample.end_date)}`:'';
+    if(pct===100)card.classList.add('all-done');
+    const pendingItems=items.filter(m=>!m.done&&!m.blocked);
+    const blockedItems=items.filter(m=>m.blocked);
+    const doneItems=items.filter(m=>m.done);
+
+    const renderMsItem=(m)=>{
+      const cfg=WS_CONFIG[m.workstream]||{color:'#888',bg:'#F5F5F5'};
+      const stateClass=m.done?'ms-done':m.blocked?'ms-blocked':'';
+      const checkIcon=m.done?'&#10003;':m.blocked?'&#10007;':'';
+      const badge=m.done
+        ?`<span class="ms-status-badge done">&#10003; Completed</span>`
+        :m.blocked?`<span class="ms-status-badge blocked">&#9888; Blocked</span>`:'';
+      const checkClick=isReadOnly?'':`onclick="toggleMilestone('${m.id}')"`;
+      const delBtn=isReadOnly?'':`<button class="ms-del" onclick="deleteMilestoneUI('${m.id}')">&#10005;</button>`;
+      const checkState=m.done?'done':m.blocked?'blocked':'';
+      const titleTxt=m.done?'Completed':m.blocked?'Blocked':'Click to mark done';
+      const cursorStyle=isReadOnly?'cursor:default':'';
+      const textClass=m.done?'done-text':'';
+      const wsTag=m.workstream?`<span class="ms-ws" style="background:${cfg.bg};color:${cfg.color}">${m.workstream}</span>`:'';
+      return `<div class="milestone-item ${stateClass}">
+        <div class="ms-check ${checkState}" ${checkClick} style="${cursorStyle}" title="${titleTxt}">${checkIcon}</div>
+        <div class="ms-text ${textClass}" style="flex:1">${m.description}</div>
+        ${badge}${wsTag}${delBtn}
+      </div>`;
+    };
+
+    const pendingHtml=pendingItems.map(renderMsItem).join('');
+    const blockedHtml=blockedItems.map(renderMsItem).join('');
+    const completedDivider=doneItems.length
+      ?'<div style="display:flex;align-items:center;gap:8px;margin:14px 0 10px">'
+        +'<div style="flex:1;height:1px;background:rgba(26,122,74,0.25)"></div>'
+        +'<span style="font-size:10px;font-family:DM Mono,monospace;color:var(--green);font-weight:700;letter-spacing:0.6px">&#10003; COMPLETED ('+doneItems.length+')</span>'
+        +'<div style="flex:1;height:1px;background:rgba(26,122,74,0.25)"></div>'
+        +'</div>'
+      :'';
+    const doneHtml=completedDivider+doneItems.map(renderMsItem).join('');
+    const weekTitleColor=pct===100?'var(--green)':'inherit';
+
+    card.innerHTML=`<div class="week-head" onclick="toggleWeek(this)">
+      <span class="week-num ${pct===100?'done':''}" >WEEK ${wn}</span>
+      <div style="flex:1">
+        <div class="week-title" style="color:${weekTitleColor}">${pct===100?'&#10003; ':''}Week ${wn} Targets</div>
+        ${dateRange?`<div style="font-size:11px;color:var(--ink4);font-family:'DM Mono',monospace;margin-top:2px">${dateRange}</div>`:''}
+      </div>
+      <div style="text-align:right">
+        <div class="week-pct" style="color:${pct===100?'var(--green)':pct>50?'var(--amber)':'var(--red)'}">${pct}%</div>
+        <div style="font-size:10px;color:var(--ink4);font-family:'DM Mono',monospace">${done}/${total} done</div>
+      </div>
+      <span style="margin-left:10px;color:var(--ink4);font-size:12px;transform:rotate(0deg);transition:transform 0.2s" class="wk-arrow">&#9660;</span>
+    </div>
+    <div class="week-body ${wn<=2?'open':''}">
+      <div style="height:5px;background:var(--cream3);border-radius:3px;margin-bottom:16px;overflow:hidden">
+        <div style="height:100%;border-radius:3px;background:${pct===100?'var(--green)':pct>50?'var(--amber)':'var(--red)'};width:${pct}%;transition:width 0.6s ease"></div>
+      </div>
+      ${pendingHtml+blockedHtml+doneHtml}
+    </div>`;
+    list.appendChild(card);
+  });
+}
+
+function toggleWeek(el){
+  const body=el.nextElementSibling,arrow=el.querySelector('.wk-arrow');
+  body.classList.toggle('open');el.classList.toggle('open');
+  arrow.style.transform=body.classList.contains('open')?'rotate(180deg)':'rotate(0deg)';
+}
+
+async function toggleMilestone(id){
+  const m=milestones.find(x=>x.id===id);if(!m)return;
+  if(m.blocked){m.blocked=false;m.done=false;}
+  else if(m.done){m.done=false;}
+  else{m.done=true;}
+  renderWeekly();renderDashboard();
+  await patchMilestone(id,{done:m.done,blocked:m.blocked});
+}
+
+async function deleteMilestoneUI(id){
+  if(!confirm('Delete this milestone?'))return;
+  milestones=milestones.filter(m=>m.id!==id);renderWeekly();renderDashboard();
+  await deleteMilestone(id);
+}
+
+function toggleMsForm(){
+  const form=document.getElementById('ms-add-form');
+  const isHidden=form.style.display==='none';
+  form.style.display=isHidden?'block':'none';
+  if(isHidden){
+    syncAllWsDropdowns();
+    document.getElementById('ms-desc').focus();
+  }
+}
+function closeMsModal(){document.getElementById('ms-add-form').style.display='none';}
+async function addMilestone(){
+  const desc=document.getElementById('ms-desc').value.trim();
+  const weekNum=parseInt(document.getElementById('ms-week').value)||1;
+  const ws=document.getElementById('ms-ws').value;
+  const startDate=document.getElementById('ms-start').value;
+  const endDate=document.getElementById('ms-end').value;
+  if(!desc){alert('Please enter a milestone description.');return;}
+  if(!ws){alert('Please select a workstream.');return;}
+  const ms={
+    id:genId(),
+    week_num:weekNum,
+    week_label:'Week '+weekNum,
+    start_date:startDate,
+    end_date:endDate,
+    description:desc,
+    workstream:ws,
+    done:false,
+    blocked:false,
+    created_at:new Date().toISOString()
+  };
+  milestones.push(ms);
+  document.getElementById('ms-desc').value='';
+  document.getElementById('ms-add-form').style.display='none';
+  renderWeekly();renderDashboard();
+  await saveMilestone(ms);
+}
+
+// ─── GANTT ────────────────────────────────────────────────────────────────
+function renderGantt(){
+  const wrap=document.getElementById('gantt-wrap');wrap.innerHTML='';
+  const withDates=tasks.filter(t=>t.due_date);
+  if(!withDates.length){wrap.innerHTML='<div class="empty" style="padding:60px"><div class="empty-ico">📅</div><div class="empty-txt">No tasks with due dates</div><div class="empty-sub">Add due dates to tasks to see the Gantt chart</div></div>';return;}
+  const dates=withDates.map(t=>new Date(t.due_date));
+  const minDate=new Date(Math.min(...dates));const maxDate=new Date(Math.max(...dates));
+  minDate.setDate(minDate.getDate()-7);maxDate.setDate(maxDate.getDate()+7);
+  const totalDays=(maxDate-minDate)/(1000*60*60*24);
+  const labelW=200,wsW=100;
+  // Build weeks
+  const weeks=[];let d=new Date(minDate);
+  while(d<=maxDate){const w=new Date(d);weeks.push(w);d.setDate(d.getDate()+7);}
+  const totalW=Math.max(weeks.length*80,400);
+  const tableW=labelW+wsW+totalW;
+  let html=`<div style="overflow-x:auto"><table style="width:${tableW}px;border-collapse:collapse;min-width:100%">
+    <thead><tr style="background:var(--cream2)">
+      <th style="width:${labelW}px;padding:10px 14px;text-align:left;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--ink4);border-bottom:1px solid var(--b);border-right:1px solid var(--b)">Task</th>
+      <th style="width:${wsW}px;padding:10px 8px;text-align:left;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--ink4);border-bottom:1px solid var(--b);border-right:1px solid var(--b)">Stream</th>
+      ${weeks.map(w=>`<th style="width:80px;padding:8px 4px;text-align:center;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--ink4);border-bottom:1px solid var(--b);border-right:1px solid var(--b);font-family:'DM Mono',monospace">${w.toLocaleDateString('en-IN',{day:'numeric',month:'short'})}</th>`).join('')}
+    </tr></thead><tbody>`;
+  withDates.sort((a,b)=>new Date(a.due_date)-new Date(b.due_date)).forEach(t=>{
+    const cfg=WS_CONFIG[t.workstream]||{color:'#888',bg:'#F5F5F5'};
+    const dueDate=new Date(t.due_date);
+    const startDay=Math.round((dueDate-minDate)/(1000*60*60*24))-7;
+    const startWeekIdx=Math.max(0,Math.floor(startDay/7));
+    const dueWeekIdx=Math.min(weeks.length-1,Math.round((dueDate-minDate)/(1000*60*60*24)/7));
+    html+=`<tr style="border-bottom:1px solid var(--b)">
+      <td style="padding:10px 14px;font-size:12px;font-weight:500;color:var(--ink);border-right:1px solid var(--b);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:${labelW}px">${t.name}</td>
+      <td style="padding:10px 8px;border-right:1px solid var(--b)"><span style="font-size:10px;font-family:'DM Mono',monospace;font-weight:600;padding:2px 6px;border-radius:3px;background:${cfg.bg};color:${cfg.color};white-space:nowrap">${t.workstream}</span></td>
+      ${weeks.map((w,wi)=>{
+        const isActive=wi===dueWeekIdx;const isBefore=wi<dueWeekIdx;
+        if(isActive)return`<td style="padding:6px 4px;border-right:1px solid var(--b);background:${cfg.bg}"><div style="height:20px;border-radius:4px;background:${cfg.color};display:flex;align-items:center;padding:0 6px"><span style="font-size:10px;font-weight:600;color:#fff;font-family:'DM Mono',monospace;white-space:nowrap;overflow:hidden">${t.pct}%</span></div></td>`;
+        if(isBefore)return`<td style="padding:6px 4px;border-right:1px solid var(--b);background:var(--cream)"><div style="height:20px;border-radius:4px;background:${cfg.color}22;border:1px dashed ${cfg.color}44"></div></td>`;
+        return`<td style="padding:6px 4px;border-right:1px solid var(--b)"></td>`;
+      }).join('')}
+    </tr>`;
+  });
+  html+=`</tbody></table></div>`;
+  wrap.innerHTML=html;
+}
+
+// ─── COMMENTS ─────────────────────────────────────────────────────────────
+function formatCommentDate(iso){
+  const d=new Date(iso);
+  const now=new Date();
+  const diff=now-d;
+  const time=d.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',hour12:true});
+  const day=d.getDate();
+  const month=d.toLocaleString('en-IN',{month:'short'});
+  const year=d.getFullYear();
+  const dateStr=day+' '+month+' '+year;
+  if(diff<60000)return'Just now';
+  if(diff<3600000)return Math.round(diff/60000)+'m ago · '+dateStr+' · '+time;
+  return dateStr+' · '+time;
+}
+
+function buildCommentEl(c,isReply){
+  const roleColors={team:'#1A5FA8',client:'#C73B1E',pm:'#1A7A4A',contractor:'#6B35B8'};
+  const roleLabels={team:'Team',client:'Client',pm:'PM',contractor:'Contractor'};
+  const col=roleColors[c.author_role]||'#888';
+  const cfg=c.workstream?WS_CONFIG[c.workstream]:null;
+  const el=document.createElement('div');
+  el.className='comment-item'+(isReply?' reply-item':'')+(c.author_role==='client'&&!isReply?' client-comment':'');
+  el.dataset.cid=c.id;
+  const avSize=isReply?'26px':'34px';
+  const avFont=isReply?'10px':'13px';
+  const wsTag=cfg&&!isReply?`<span style="font-size:10px;font-weight:700;font-family:'DM Mono',monospace;padding:2px 7px;border-radius:20px;background:${cfg.bg};color:${cfg.color};text-transform:uppercase;letter-spacing:0.4px">${c.workstream}</span>`:'';
+  const replyBtn=`<button class="c-reply-btn" onclick="toggleReplyForm('${c.id}')">↩ Reply</button>`;
+  const deleteBtn=isReadOnly?'':isReply
+    ?`<button onclick="deleteReplyUI('${c.id}')" style="background:none;border:none;cursor:pointer;color:var(--text4);font-size:11px;padding:2px 6px;border-radius:4px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;transition:all 0.12s;margin-top:8px;display:inline-flex;align-items:center;gap:3px" onmouseover="this.style.color='var(--red)';this.style.background='var(--red-dim)'" onmouseout="this.style.color='var(--text4)';this.style.background='none'">&#10005; Delete</button>`
+    :`<button onclick="deleteCommentUI('${c.id}')" style="background:none;border:none;cursor:pointer;color:var(--text4);font-size:11px;padding:2px 6px;border-radius:4px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;transition:all 0.12s;margin-top:8px;display:inline-flex;align-items:center;gap:3px" onmouseover="this.style.color='var(--red)';this.style.background='var(--red-dim)'" onmouseout="this.style.color='var(--text4)';this.style.background='none'">&#10005; Delete</button>`;
+  const replyForm=!isReply?`
+    <div class="c-reply-form" id="rf-${c.id}">
+      <div style="display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap">
+        <input id="rn-${c.id}" placeholder="Your name" style="padding:6px 10px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r3);font-size:12px;color:var(--text);outline:none;font-family:'Plus Jakarta Sans',sans-serif;flex:1;min-width:100px">
+        <select id="rr-${c.id}" style="padding:6px 10px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r3);font-size:12px;color:var(--text3);outline:none;font-family:'Plus Jakarta Sans',sans-serif;appearance:none">
+          <option value="team">Team</option><option value="client">Client</option><option value="pm">PM</option><option value="contractor">Contractor</option>
+        </select>
+      </div>
+      <textarea id="rt-${c.id}" placeholder="Write a reply…" rows="2" style="width:100%;background:transparent;border:none;outline:none;font-family:'Bricolage Grotesque',sans-serif;font-size:13px;color:var(--ink);resize:none;min-height:52px;box-sizing:border-box"></textarea>
+      <div style="display:flex;justify-content:flex-end;gap:6px;margin-top:8px;border-top:1px solid var(--b);padding-top:8px">
+        <button onclick="toggleReplyForm('${c.id}')" style="padding:6px 14px;background:transparent;border:1px solid var(--b2);border-radius:var(--r3);font-size:12px;cursor:pointer;font-family:'Bricolage Grotesque',sans-serif;color:var(--ink3)">Cancel</button>
+        <button onclick="postReply('${c.id}')" style="padding:6px 14px;background:var(--ink);color:#fff;border:none;border-radius:var(--r3);font-size:12px;cursor:pointer;font-family:'Bricolage Grotesque',sans-serif;font-weight:600">Post Reply</button>
+      </div>
+    </div>
+    <div class="c-thread" id="thread-${c.id}"></div>`:'';
+  el.innerHTML=`
+    <div style="display:flex;gap:10px;align-items:flex-start">
+      <div class="c-av" style="background:${col};width:${avSize};height:${avSize};font-size:${avFont}">${(c.author_name||'?')[0].toUpperCase()}</div>
+      <div style="flex:1;min-width:0">
+        <div class="c-meta">
+          <span class="c-name">${c.author_name||'Anonymous'}</span>
+          <span class="c-role" style="background:${col}18;color:${col};border:1px solid ${col}30">${roleLabels[c.author_role]||c.author_role}</span>
+          ${wsTag}
+          <span class="c-date">${formatCommentDate(c.created_at)}</span>
+        </div>
+        <div class="c-text" style="margin-bottom:${isReply?'0':'8px'}">${c.content}</div>
+        <div style="display:flex;align-items:center;gap:6px">${isReply?'':replyBtn}${deleteBtn}</div>
+        ${replyForm}
+      </div>
+    </div>`;
+  return el;
+}
+
+function renderComments(){
+  const list=document.getElementById('comments-list');list.innerHTML='';
+  if(!comments.length){list.innerHTML='<div class="empty"><div class="empty-ico">💬</div><div class="empty-txt">No comments yet</div></div>';renderCommentStats();return;}
+  // Separate top-level and replies
+  const topLevel=[...comments].filter(c=>!c.parent_id).sort((a,b)=>new Date(a.created_at)-new Date(b.created_at));
+  const replies=comments.filter(c=>c.parent_id);
+  topLevel.forEach(c=>{
+    const el=buildCommentEl(c,false);
+    list.appendChild(el);
+    // Append replies under this comment
+    const thread=el.querySelector('#thread-'+c.id);
+    if(thread){
+      const childReplies=replies.filter(r=>r.parent_id===c.id).sort((a,b)=>new Date(a.created_at)-new Date(b.created_at));
+      childReplies.forEach(r=>{thread.appendChild(buildCommentEl(r,true));});
+    }
+  });
+  renderCommentStats();
+}
+
+function toggleReplyForm(parentId){
+  const rf=document.getElementById('rf-'+parentId);
+  if(rf)rf.classList.toggle('open');
+}
+
+async function postReply(parentId){
+  const text=document.getElementById('rt-'+parentId)?.value.trim();
+  const name=document.getElementById('rn-'+parentId)?.value.trim()||currentUser?.email||'Anonymous';
+  const role=document.getElementById('rr-'+parentId)?.value||'team';
+  if(!text)return;
+  const parent=comments.find(c=>c.id===parentId);
+  const r={id:genId(),task_id:null,parent_id:parentId,author_name:name,author_email:currentUser?.email||'',author_role:role,content:text,workstream:parent?.workstream||'',created_at:new Date().toISOString()};
+  comments.push(r);
+  renderComments();updateBadges();
+  await saveComment(r);
+}
+
+function timeAgo(iso){
+  return formatCommentDate(iso);
+}
+
+function renderCommentStats(){
+  const el=document.getElementById('comment-stats');
+  const byRole={};comments.forEach(c=>{byRole[c.author_role]=(byRole[c.author_role]||0)+1;});
+  const clientComments=comments.filter(c=>c.author_role==='client');
+  el.innerHTML=`<div style="display:flex;flex-direction:column;gap:8px">
+    <div style="display:flex;justify-content:space-between;font-size:11px"><span style="color:var(--ink3)">Total</span><span style="font-weight:600;font-family:'JetBrains Mono',monospace">${comments.length}</span></div>
+    <div style="display:flex;justify-content:space-between;font-size:11px"><span style="color:var(--red)">Client</span><span style="font-weight:600;font-family:'JetBrains Mono',monospace;color:var(--red)">${clientComments.length}</span></div>
+    <div style="display:flex;justify-content:space-between;font-size:11px"><span style="color:var(--ink3)">Team</span><span style="font-weight:600;font-family:'JetBrains Mono',monospace">${byRole.team||0}</span></div>
+    <div style="display:flex;justify-content:space-between;font-size:11px"><span style="color:var(--ink3)">PM</span><span style="font-weight:600;font-family:'JetBrains Mono',monospace">${byRole.pm||0}</span></div>
+    ${clientComments.length>0?`<div style="margin-top:8px;padding:8px;background:var(--red-dim);border-radius:6px;font-size:11px;color:var(--red)">⚠ ${clientComments.length} client comment${clientComments.length>1?'s':''} need${clientComments.length>1?'':'s'} response</div>`:''}
+  </div>`;
+}
+
+async function addComment(){
+  const text=document.getElementById('c-text').value.trim();
+  const name=document.getElementById('c-name').value.trim()||currentUser?.email||'Anonymous';
+  if(!text){alert('Enter a comment.');return;}
+  const c={id:genId(),task_id:null,parent_id:null,author_name:name,author_email:currentUser?.email||'',author_role:document.getElementById('c-role').value,content:text,workstream:document.getElementById('c-ws').value,created_at:new Date().toISOString()};
+  comments.push(c);document.getElementById('c-text').value='';
+  renderComments();updateBadges();await saveComment(c);
+}
+
+// ─── TABS ─────────────────────────────────────────────────────────────────
+let currentTab='dashboard';
+function showTab(tab){
+  currentTab=tab;
+  ['dashboard','daily','weekly','gantt','comments'].forEach(t=>{
+    const el=document.getElementById('tab-'+t);
+    if(el) el.style.display=t===tab?'block':'none';
+  });
+  document.querySelectorAll('.nav-tab[data-tab]').forEach(el=>{
+    el.className='nav-tab'+(el.dataset.tab===tab?' on':'');
+  });
+  try{
+    if(tab==='gantt') renderGantt();
+    if(tab==='comments') renderComments();
+    if(tab==='weekly'){ renderWeekly(); syncAllWsDropdowns(); }
+  }catch(e){ console.warn('Tab render error:',e); }
+}
+
+function updateBadges(){
+  const blocked=tasks.filter(t=>t.status==='blocked').length;
+  document.getElementById('badge-daily').textContent=blocked>0?blocked:'';
+  document.getElementById('badge-daily').style.display=blocked>0?'inline':'none';
+  const clientC=comments.filter(c=>c.author_role==='client').length;
+  document.getElementById('badge-comments').textContent=clientC>0?clientC:'';
+  document.getElementById('badge-comments').style.display=clientC>0?'inline':'none';
+}
+
+// ─── AI INSIGHTS ──────────────────────────────────────────────────────────
+function genInsights(){
+  const area=document.getElementById('ai-insights');area.innerHTML='';
+  if(!tasks.length){area.innerHTML='<div class="ai-ins i-info"><span class="aii">💡</span><span>Add tasks to see AI insights.</span></div>';return;}
+  const ins=[];
+  const blocked=tasks.filter(t=>t.status==='blocked');
+  if(blocked.length)ins.push({t:'i-danger',i:'🚨',m:`<strong>${blocked.length} task${blocked.length>1?'s are':' is'} blocked</strong>: ${blocked.map(t=>t.name).slice(0,2).join(', ')}${blocked.length>2?'…':''}`});
+  const overdue=tasks.filter(t=>t.due_date&&new Date(t.due_date)<new Date()&&t.status!=='done');
+  if(overdue.length)ins.push({t:'i-warn',i:'⚠️',m:`<strong>${overdue.length} overdue task${overdue.length>1?'s':''}.</strong> ${overdue[0].name} was due ${fmt(overdue[0].due_date)}.`});
+  const avgPct=tasks.length?Math.round(tasks.reduce((s,t)=>s+Number(t.pct),0)/tasks.length):0;
+  if(avgPct>70)ins.push({t:'i-ok',i:'✅',m:`Overall project progress at <strong>${avgPct}%</strong> — excellent momentum.`});
+  else if(avgPct>40)ins.push({t:'i-info',i:'📊',m:`Site progress at <strong>${avgPct}%</strong>. Keep pushing to meet milestones.`});
+  else ins.push({t:'i-warn',i:'📊',m:`Overall progress at <strong>${avgPct}%</strong>. Acceleration needed.`});
+  const clientC=comments.filter(c=>c.author_role==='client').length;
+  if(clientC>0)ins.push({t:'i-warn',i:'💬',m:`<strong>${clientC} client comment${clientC>1?'s':''}</strong> waiting for response in Comments tab.`});
+  const thisWeek=milestones.filter(m=>!m.done&&!m.blocked);
+  if(thisWeek.length)ins.push({t:'i-info',i:'🎯',m:`<strong>${thisWeek.length} milestone${thisWeek.length>1?'s':''}</strong> pending. ${thisWeek[0].description.slice(0,60)}…`});
+  if(!ins.length)ins.push({t:'i-ok',i:'✅',m:'All systems on track. No blockers detected.'});
+  ins.forEach(x=>{const d=document.createElement('div');d.className=`ai-ins ${x.t}`;d.innerHTML=`<span class="aii">${x.i}</span><span>${x.m}</span>`;area.appendChild(d);});
+}
+
+// ─── AI CHAT ──────────────────────────────────────────────────────────────
+function ctxStr(){
+  const avgPct=tasks.length?Math.round(tasks.reduce((s,t)=>s+Number(t.pct),0)/tasks.length):0;
+  const blocked=tasks.filter(t=>t.status==='blocked').map(t=>`${t.name} (${t.workstream})`).join(', ')||'None';
+  const overdue=tasks.filter(t=>t.due_date&&new Date(t.due_date)<new Date()&&t.status!=='done').map(t=>t.name).join(', ')||'None';
+  const streamSummary=Object.keys(WS_CONFIG).map(ws=>{const wt=tasks.filter(t=>t.workstream===ws);const avg=wt.length?Math.round(wt.reduce((s,t)=>s+Number(t.pct),0)/wt.length):0;return`${ws}: ${avg}% (${wt.length} tasks, ${wt.filter(t=>t.status==='blocked').length} blocked)`;}).join('\n');
+  return `You are the project progress AI for the National Postal Museum construction project in India.\n\nOverall Progress: ${avgPct}%\nTotal Tasks: ${tasks.length}\nBlocked: ${blocked}\nOverdue: ${overdue}\nMilestones Pending: ${milestones.filter(m=>!m.done).length}\nClient Comments Unread: ${comments.filter(c=>c.author_role==='client').length}\n\nBy Workstream:\n${streamSummary}\n\nBe concise, professional, and actionable. Under 120 words. If asked for a client update, write it in formal language suitable to share directly with the client.`;
+}
+function addBubble(txt,role,ld){
+  const msgs=document.getElementById('chat-msgs');
+  const w=document.createElement('div');w.style.display='flex';
+  const b=document.createElement('div');b.className=`bbl b${role}${ld?' ld':''}`;b.innerHTML=txt;
+  w.appendChild(b);msgs.appendChild(w);msgs.scrollTop=9999;return b;
+}
+async function sendMsg(){
+  const inp=document.getElementById('cin'),btn=document.getElementById('snd-btn');
+  const txt=inp.value.trim();if(!txt)return;
+  inp.value='';btn.disabled=true;addBubble(txt,'u');
+  const el=addBubble('Analysing site data…','a',true);
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:ctxStr(),messages:[{role:'user',content:txt}]})});
+    const d=await r.json();
+    el.className='bbl ba';el.textContent=d.content?.[0]?.text||'Could not analyse.';
+  }catch{el.className='bbl ba';el.textContent='Connection error.';}
+  btn.disabled=false;
+}
+function ask(q){document.getElementById('cin').value=q;sendMsg();}
+
+// ─── SHARE ────────────────────────────────────────────────────────────────
+function applyReadOnlyUI(){
+  // Hide all edit/add/delete buttons and forms in read-only mode
+  // Hide all interactive controls not relevant to clients
+  ['btn-add-update','btn-share','btn-so','btn-ws','btn-add-ms','share-banner'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none';});
+  // Pre-set comment form to client role and hide role selector
+  const roleEl=document.getElementById('c-role');if(roleEl){roleEl.value='client';roleEl.closest('div')&&(roleEl.style.display='none');}
+  // Show a subtle "commenting as client" label
+  const cfoot=document.querySelector('.comment-foot span');if(cfoot)cfoot.textContent='You are commenting as Client · visible to all collaborators';
+  // Hide buttons with edit-related onclick handlers
+  document.querySelectorAll('[onclick*="addTask"],[onclick*="deleteTask"],[onclick*="openWsModal"],[onclick*="signOut"],[onclick*="toggleMsForm"],[onclick*="addMilestone"],[onclick*="deleteMilestone"]').forEach(el=>el.style.display='none');
+  // Hide the add-form-section in Daily Updates tab
+  const afs=document.getElementById('add-form-section');if(afs)afs.style.display='none';
+  // Add a green read-only banner
+  const banner=document.createElement('div');
+  banner.style.cssText='background:#1A7A4A;color:#fff;text-align:center;padding:7px 16px;font-size:12px;font-family:"DM Mono",monospace;letter-spacing:0.03em;position:relative;z-index:999;';
+  banner.textContent='👁  Read-only view  ·  National Postal Museum Project Tracker';
+  document.body.insertBefore(banner,document.body.firstChild);
+}
+function getShareUrl(overrideBase){
+  let base=(overrideBase||window.location.href).split('?')[0];
+  const params=new URLSearchParams();
+  params.set('view','client');
+  // Only add creds to URL if not already baked into the file
+  const credsBaked=(BAKED_URL&&BAKED_URL===sbUrl&&BAKED_KEY&&BAKED_KEY===sbKey);
+  if(!credsBaked){
+    if(sbUrl)params.set('url',sbUrl);
+    if(sbKey)params.set('key',sbKey);
+  }
+  return base+'?'+params.toString();
+}
+function shareReport(){
+  const modal=document.getElementById('share-banner');
+  modal.style.display='flex';
+  const isLocal=window.location.protocol==='file:';
+  document.getElementById('share-local-warning').style.display=isLocal?'block':'none';
+  // Show hosted URL input row always so user can override
+  document.getElementById('share-hosted-row').style.display='block';
+  // Pre-fill if we're already on https
+  const hostedInput=document.getElementById('share-hosted-input');
+  if(!isLocal&&!hostedInput.value){
+    hostedInput.value=window.location.href.split('?')[0];
+  }
+  refreshShareLink();
+}
+function refreshShareLink(){
+  const hostedInput=document.getElementById('share-hosted-input');
+  const base=hostedInput.value.trim()||null;
+  const link=getShareUrl(base);
+  const linkEl=document.getElementById('share-link-txt');
+  linkEl.textContent=link;
+  linkEl.dataset.href=link;
+}
+function bakeAndDownload(){
+  const hostedInput=document.getElementById('share-hosted-input');
+  const base=hostedInput.value.trim();
+  if(!base){alert('Please enter your Netlify URL first.');return;}
+  if(!sbUrl||!sbKey){alert('No Supabase credentials found. Please connect first.');return;}
+  // Get current HTML, replace the baked constants with actual values
+  const xhr=new XMLHttpRequest();
+  xhr.open('GET',window.location.href.split('?')[0],true);
+  xhr.onload=function(){
+    let html=xhr.responseText;
+    html=html.replace("const BAKED_URL='';","const BAKED_URL='"+sbUrl+"';");
+    html=html.replace("const BAKED_KEY='';","const BAKED_KEY='"+sbKey+"';");
+    const blob=new Blob([html],{type:'text/html'});
+    const a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);
+    a.download='index.html';
+    a.click();
+    URL.revokeObjectURL(a.href);
+  };
+  xhr.onerror=function(){
+    // Fallback: fetch from current page source if XHR blocked
+    alert('Could not auto-download. Please use the manual method: open the file, find BAKED_URL and BAKED_KEY and fill them in manually, then re-upload to Netlify.');
+  };
+  xhr.send();
+}
+function refreshShareLink(){
+  const hostedInput=document.getElementById('share-hosted-input');
+  const base=hostedInput.value.trim()||null;
+  const link=getShareUrl(base);
+  const linkEl=document.getElementById('share-link-txt');
+  linkEl.textContent=link;
+  linkEl.dataset.href=link;
+  // Update baked preview
+  const preview=document.getElementById('baked-preview');
+  if(preview&&base){
+    const shortParams=new URLSearchParams();
+    shortParams.set('view','client');
+    preview.textContent=base+'?'+shortParams.toString();
+  }
+}
+function copyShareLink(){
+  const linkEl=document.getElementById('share-link-txt');
+  const link=linkEl.dataset.href||linkEl.textContent;
+  navigator.clipboard.writeText(link).then(()=>{
+    const orig=linkEl.textContent;
+    linkEl.textContent='✅ Copied!';
+    const btn=document.getElementById('copy-share-btn');
+    if(btn){btn.textContent='Copied!';setTimeout(()=>{btn.textContent='Copy';},2000);}
+    setTimeout(()=>{linkEl.textContent=orig;},2000);
+  });
+}
+function copyLocalInstructions(){
+  const cmd='cd ~/Downloads && python3 -m http.server 8080';
+  navigator.clipboard.writeText(cmd).then(()=>{
+    const lbl=document.getElementById('local-copy-lbl');
+    lbl.textContent='Copied!';
+    setTimeout(()=>{lbl.textContent='Copy command';},2000);
+  });
+}
+
+// ─── WORKSTREAM MODAL ────────────────────────────────────────────────────
+function openWsModal(){
+  renderWsList();
+  document.getElementById('ws-modal').className='modal-overlay open';
+}
+function closeWsModal(){document.getElementById('ws-modal').className='modal-overlay';}
+function renderWsList(){
+  const list=document.getElementById('ws-list');list.innerHTML='';
+  Object.entries(WS_CONFIG).forEach(([name,cfg])=>{
+    const d=document.createElement('div');
+    d.style.cssText='display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg3);border-radius:8px;border:1px solid var(--border)';
+    d.innerHTML=`<span style="font-size:18px">${cfg.icon}</span>
+      <span style="flex:1;font-size:13px;font-weight:500;color:var(--ink)">${name}</span>
+      <span style="width:12px;height:12px;border-radius:50%;background:${cfg.color};flex-shrink:0"></span>
+      <button onclick="deleteWorkstream('${name}')" style="background:none;border:none;cursor:pointer;color:var(--text3);font-size:12px;padding:3px 7px;border-radius:4px;transition:all 0.12s;font-family:'Plus Jakarta Sans',sans-serif" onmouseover="this.style.background='var(--red-dim)';this.style.color='var(--red)'" onmouseout="this.style.background='none';this.style.color='var(--text3)'">✕ Delete</button>`;
+    list.appendChild(d);
+  });
+}
+function addWsFromModal(){
+  const name=document.getElementById('ws-new-name').value.trim();
+  const icon=document.getElementById('ws-new-icon').value;
+  if(!name){alert('Enter a workstream name.');return;}
+  if(WS_CONFIG[name]){alert('Workstream already exists.');return;}
+  addWorkstream(name,icon);
+  document.getElementById('ws-new-name').value='';
+  renderWsList();
+}
+
+// ─── INIT ─────────────────────────────────────────────────────────────────
+document.getElementById('today-date-label').textContent='Today · '+new Date().toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+loadWorkstreams();
+syncAllWsDropdowns();
+
+(function init(){
+  // ── Read-only client share link detection ──────────────────────────────
+  const params=new URLSearchParams(window.location.search);
+  if(params.get('view')==='client'){
+    const pu=params.get('url')||BAKED_URL,pk=params.get('key')||BAKED_KEY;
+    if(pu&&pk){
+      sbUrl=pu;sbKey=pk;
+      isReadOnly=true;
+      document.getElementById('ov-setup').style.display='none';
+      document.getElementById('ov-login').style.display='none';
+      document.getElementById('h-sub').textContent='Supabase · Live';
+      setSyncStatus('live');
+      // Hide all edit controls for client view
+      document.querySelectorAll('#btn-add-update,#btn-so,#btn-ws,#share-banner').forEach(el=>{if(el)el.style.display='none';});
+      loadFromSB().then(()=>{renderAll();applyReadOnlyUI();}).catch(e=>{
+        // Fallback to demo data with a notice
+        isDemo=true;tasks=JSON.parse(JSON.stringify(DEMO_TASKS));milestones=JSON.parse(JSON.stringify(DEMO_MS));comments=JSON.parse(JSON.stringify(DEMO_COMMENTS));
+        renderAll();applyReadOnlyUI();
+      });
+      return;
+    }
+  }
+  // ── Normal logged-in user flow ──────────────────────────────────────────
+  const su=localStorage.getItem('spt_url'),sk=localStorage.getItem('spt_key'),st=localStorage.getItem('spt_token');
+  if(su&&sk){
+    sbUrl=su;sbKey=sk;
+    document.getElementById('sb-url').value=su;document.getElementById('sb-key').value=sk;
+    document.getElementById('h-sub').textContent='Supabase · Live';setSyncStatus('live');
+    if(st){sbToken=st;sbUser(st).then(u=>{if(u&&u.email){document.getElementById('ov-setup').style.display='none';loginSuccess(u);}else{document.getElementById('ov-setup').style.display='none';document.getElementById('ov-login').style.display='flex';}});}
+    else{document.getElementById('ov-setup').style.display='none';document.getElementById('ov-login').style.display='flex';}
+  }
+})();
+</script>
+</body>
+</html>

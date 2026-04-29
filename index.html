@@ -460,6 +460,7 @@ create policy "Allow all" on site_comments for all to anon, authenticated using 
   <div class="nav-tab" data-tab="weekly" onclick="showTab('weekly')">🎯 Weekly Milestones</div>
   <div class="nav-tab" data-tab="gantt" onclick="showTab('gantt')">📅 Gantt View</div>
   <div class="nav-tab" data-tab="comments" onclick="showTab('comments')">💬 Comments <span class="badge" id="badge-comments" style="background:var(--bd);color:var(--blue)"></span></div>
+  <div class="nav-tab" data-tab="photos" onclick="showTab('photos')">📸 Site Photos</div>
   <div class="nav-right">
     <button id="btn-ws" class="btn-sm-ghost" onclick="openWsModal()">⚙️ Workstreams</button>
     <button id="btn-add-update" class="btn-sm btn-red" onclick="showTab('daily');document.getElementById('add-form-section').scrollIntoView({behavior:'smooth'})">+ Add Update</button>
@@ -793,6 +794,48 @@ create policy "Allow all" on site_comments for all to anon, authenticated using 
 
 <!-- ADD MILESTONE MODAL -->
 
+<!-- PHOTOS TAB -->
+<div id="tab-photos" class="page" style="display:none">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+    <div>
+      <div class="sec-title">📸 Site Photos</div>
+      <div class="sec-sub">Daily site photography — opens Google Drive folder</div>
+    </div>
+    <button id="btn-add-photo-folder" onclick="openAddPhotoModal()" class="btn-sm btn-red">+ Add Date Folder</button>
+  </div>
+
+  <!-- Add folder modal -->
+  <div class="modal-overlay" id="photo-modal">
+    <div class="modal" style="max-width:460px">
+      <h3>📸 Add Photo Folder</h3>
+      <div class="of">
+        <label>Date</label>
+        <input type="date" id="ph-date">
+      </div>
+      <div class="of">
+        <label>Google Drive Folder Link</label>
+        <input type="url" id="ph-url" placeholder="https://drive.google.com/drive/folders/...">
+      </div>
+      <div class="of">
+        <label>Workstream</label>
+        <select id="ph-ws">
+          <option value="">All / General</option>
+        </select>
+      </div>
+      <div class="of">
+        <label>Description (optional)</label>
+        <input id="ph-desc" placeholder="e.g. HVAC ducting Level 2, Civil inspection">
+      </div>
+      <div class="modal-footer">
+        <button class="btn-cancel" onclick="closePhotoModal()">Cancel</button>
+        <button class="btn-save" onclick="savePhotoFolder()">Save Folder</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="photos-list"></div>
+</div>
+
 <script>
 // ─── CONSTANTS ───────────────────────────────────────────────────────────
 const WS_PALETTE=[
@@ -871,8 +914,8 @@ const fmt=d=>new Date(d).toLocaleDateString('en-IN',{day:'numeric',month:'short'
 let tasks=[],milestones=[],comments=[];
 let sbUrl='',sbKey='',sbToken='',isReadOnly=false;
 // Baked-in client credentials (set when you save from Share modal)
-const BAKED_URL='https://lhggyewsisfauuozggoh.supabase.co';
-const BAKED_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxoZ2d5ZXdzaXNmYXV1b3pnZ29oIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzczODk3MjksImV4cCI6MjA5Mjk2NTcyOX0.48_Xtzk47n51OXE7rXwRdmc0vTCTtOGmFj24t28iXuQ';
+const BAKED_URL='';
+const BAKED_KEY='';
 let currentUser=null,isDemo=false,currentFilter='all',editingId=null;
 
 // ─── DEMO DATA ────────────────────────────────────────────────────────────
@@ -899,6 +942,122 @@ const DEMO_COMMENTS=[
   {id:'c3',task_id:null,author_name:'Siddhant Batra',author_email:'siddhant@tagglabs.in',author_role:'pm',content:'Material samples for cabinets have been ordered and will be presented in the next site meeting on May 3rd.',workstream:'Fabrication',created_at:new Date(Date.now()-3600000*3).toISOString()},
 ];
 
+// ─── PHOTO FOLDERS ──────────────────────────────────────────────────────
+let photoFolders=[];
+
+function loadPhotoFolders(){
+  const saved=localStorage.getItem('spt_photos');
+  if(saved){try{photoFolders=JSON.parse(saved);}catch{}}
+}
+function savePhotoFolders(){
+  localStorage.setItem('spt_photos',JSON.stringify(photoFolders));
+}
+function openAddPhotoModal(){
+  document.getElementById('photo-modal').className='modal-overlay open';
+  document.getElementById('ph-date').value=new Date().toISOString().split('T')[0];
+  syncPhotoWsDropdown();
+}
+function closePhotoModal(){
+  document.getElementById('photo-modal').className='modal-overlay';
+}
+function syncPhotoWsDropdown(){
+  const sel=document.getElementById('ph-ws');
+  if(!sel)return;
+  const cur=sel.value;
+  sel.innerHTML='<option value="">All / General</option>';
+  Object.entries(WS_CONFIG).forEach(([name])=>{
+    const o=document.createElement('option');
+    o.value=name;o.textContent=name;
+    sel.appendChild(o);
+  });
+  sel.value=cur;
+}
+function savePhotoFolder(){
+  const date=document.getElementById('ph-date').value;
+  const url=document.getElementById('ph-url').value.trim();
+  const ws=document.getElementById('ph-ws').value;
+  const desc=document.getElementById('ph-desc').value.trim();
+  if(!date||!url){alert('Please enter a date and Google Drive link.');return;}
+  if(!url.includes('drive.google.com')&&!url.startsWith('http')){alert('Please enter a valid URL.');return;}
+  const folder={id:genId(),date,url,workstream:ws,description:desc,created_at:new Date().toISOString()};
+  photoFolders.unshift(folder);
+  savePhotoFolders();
+  closePhotoModal();
+  document.getElementById('ph-url').value='';
+  document.getElementById('ph-desc').value='';
+  renderPhotos();
+}
+function deletePhotoFolder(id){
+  if(!confirm('Remove this photo folder?'))return;
+  photoFolders=photoFolders.filter(f=>f.id!==id);
+  savePhotoFolders();
+  renderPhotos();
+}
+function renderPhotos(){
+  const list=document.getElementById('photos-list');
+  if(!list)return;
+  if(!photoFolders.length){
+    list.innerHTML=`<div class="empty"><div class="empty-ico">📸</div><div class="empty-txt">No photo folders yet</div><div class="empty-sub">Click "+ Add Date Folder" to link a Google Drive folder</div></div>`;
+    return;
+  }
+  // Group by date
+  const byDate={};
+  [...photoFolders].sort((a,b)=>new Date(b.date)-new Date(a.date)).forEach(f=>{
+    if(!byDate[f.date])byDate[f.date]=[];
+    byDate[f.date].push(f);
+  });
+  list.innerHTML='';
+  Object.entries(byDate).forEach(([date,folders])=>{
+    const d=new Date(date+'T00:00:00');
+    const dayLabel=d.toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+    const group=document.createElement('div');
+    group.style.cssText='margin-bottom:20px';
+    // Date header
+    const header=document.createElement('div');
+    header.style.cssText='display:flex;align-items:center;gap:10px;margin-bottom:10px';
+    header.innerHTML=`
+      <div style="width:38px;height:38px;background:var(--accent);border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0">
+        <div style="font-size:14px;font-weight:800;color:#fff;line-height:1">${d.getDate()}</div>
+        <div style="font-size:8px;font-weight:700;color:rgba(255,255,255,0.7);text-transform:uppercase;letter-spacing:0.5px">${d.toLocaleString('en-IN',{month:'short'})}</div>
+      </div>
+      <div>
+        <div style="font-size:14px;font-weight:700;color:var(--text)">${dayLabel}</div>
+        <div style="font-size:10px;color:var(--text3);font-family:'JetBrains Mono',monospace">${folders.length} folder${folders.length>1?'s':''}</div>
+      </div>`;
+    group.appendChild(header);
+    // Folder cards grid
+    const grid=document.createElement('div');
+    grid.style.cssText='display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px';
+    folders.forEach(f=>{
+      const cfg=f.workstream?WS_CONFIG[f.workstream]:null;
+      const card=document.createElement('a');
+      card.href=f.url;
+      card.target='_blank';
+      card.rel='noopener noreferrer';
+      card.style.cssText='display:block;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 16px;text-decoration:none;transition:all 0.15s;position:relative;overflow:hidden';
+      card.onmouseover=()=>{card.style.borderColor='var(--accent)';card.style.transform='translateY(-2px)';card.style.boxShadow='0 4px 20px rgba(124,92,252,0.15)'};
+      card.onmouseout=()=>{card.style.borderColor='var(--border)';card.style.transform='';card.style.boxShadow=''};
+      card.innerHTML=`
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <div style="width:36px;height:36px;background:${cfg?cfg.bg:'var(--bg3)'};border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">📁</div>
+          <div style="flex:1;min-width:0">
+            <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:2px">${f.description||'Site Photos'}</div>
+            +(cfg?('<span style="font-size:9px;font-weight:700;padding:2px 6px;border-radius:3px;background:'+cfg.bg+';color:'+cfg.color+';text-transform:uppercase">'+f.workstream+'</span>'):'<span style="font-size:9px;color:var(--text3)">General</span>')+
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--accent);font-weight:600">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            Open in Drive
+          </div>
+          ${isReadOnly?'':`<button onclick="event.preventDefault();event.stopPropagation();deletePhotoFolder('${f.id}')" style="background:none;border:none;cursor:pointer;color:var(--text4);font-size:11px;padding:2px 6px;border-radius:4px;transition:all 0.12s" onmouseover="this.style.color='var(--red)';this.style.background='var(--red-dim)'" onmouseout="this.style.color='var(--text4)';this.style.background='none'">✕</button>`}
+        </div>`;
+      grid.appendChild(card);
+    });
+    group.appendChild(grid);
+    list.appendChild(group);
+  });
+}
 // ─── SUPABASE ─────────────────────────────────────────────────────────────
 function sbH(){return{'Content-Type':'application/json','apikey':sbKey,'Authorization':'Bearer '+(sbToken||sbKey),'Prefer':'return=representation'};}
 async function sbSel(t){const r=await fetch(`${sbUrl}/rest/v1/${t}?select=*&order=created_at`,{headers:sbH()});if(!r.ok)throw new Error(r.status+':'+await r.text());return r.json();}
@@ -1467,7 +1626,7 @@ async function addComment(){
 let currentTab='dashboard';
 function showTab(tab){
   currentTab=tab;
-  ['dashboard','daily','weekly','gantt','comments'].forEach(t=>{
+  ['dashboard','daily','weekly','gantt','comments','photos'].forEach(t=>{
     const el=document.getElementById('tab-'+t);
     if(el) el.style.display=t===tab?'block':'none';
   });
@@ -1477,6 +1636,7 @@ function showTab(tab){
   try{
     if(tab==='gantt') renderGantt();
     if(tab==='comments') renderComments();
+    if(tab==='photos'){renderPhotos();syncPhotoWsDropdown();}
     if(tab==='weekly'){ renderWeekly(); syncAllWsDropdowns(); }
   }catch(e){ console.warn('Tab render error:',e); }
 }
@@ -1543,7 +1703,7 @@ function ask(q){document.getElementById('cin').value=q;sendMsg();}
 function applyReadOnlyUI(){
   // Hide all edit/add/delete buttons and forms in read-only mode
   // Hide all interactive controls not relevant to clients
-  ['btn-add-update','btn-share','btn-so','btn-ws','btn-add-ms','share-banner'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none';});
+  ['btn-add-update','btn-share','btn-so','btn-ws','btn-add-ms','share-banner','btn-add-photo-folder'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none';});
   // Pre-set comment form to client role and hide role selector
   const roleEl=document.getElementById('c-role');if(roleEl){roleEl.value='client';roleEl.closest('div')&&(roleEl.style.display='none');}
   // Show a subtle "commenting as client" label
@@ -1683,6 +1843,7 @@ function addWsFromModal(){
 // ─── INIT ─────────────────────────────────────────────────────────────────
 document.getElementById('today-date-label').textContent='Today · '+new Date().toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
 loadWorkstreams();
+loadPhotoFolders();
 syncAllWsDropdowns();
 
 (function init(){
